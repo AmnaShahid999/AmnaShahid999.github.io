@@ -9,10 +9,10 @@
 # Basic Site Settings
 locale                   : "en-US"
 site_theme               : "default"
-title                    : "AmnaShahid"
+title                    : "Amna Shahid"
 title_separator          : "-"
-name                     : &name "AmnaShahid"
-description              : &description "personal description"
+name                     : &name "Amna Shahid"
+description              : &description "Student at Columbia University"
 url                      : https://AmnaShahid999.github.io # the base hostname & protocol for your site e.g. "https://[your GitHub username].github.io"
 baseurl                  : "" # the subpath of your site, e.g. "/blog"
 repository               : "AmnaShahid999/AmnaShahid999.github.io"
@@ -23,7 +23,7 @@ repository               : "AmnaShahid999/AmnaShahid999.github.io"
 author:
   # Biographic information
   avatar           : "profile.png"
-  name             : "AmnaShahid"
+  name             : "Amna Shahid"
   pronouns         : "she/her"  
   bio              : "Fulbright scholar passionate about incorporating data science in social science research"
   location         : "United States"
@@ -33,11 +33,11 @@ author:
 
   # Academic websites
   arxiv            : # URL - Update with the correct link to your profile
-  googlescholar    : "https://scholar.google.com/citations?user=PS_CX0AAAAAJ"
+  googlescholar    : #url
   impactstory      : # URL
-  orcid            : "http://orcid.org/yourorcidurl"
+  orcid            : #url
   semantic         : # URL
-  pubmed           : "https://www.ncbi.nlm.nih.gov/pubmed/?term=john+snow"
+  pubmed           : #url
   researchgate     : # URL
   scopus           : # URL
 
@@ -45,12 +45,12 @@ author:
   bitbucket        : # Username - Update with your username on the site
   codepen          : # Username
   dribbble         : # Username
-  github           : "academicpages"
+  github           : "AmnaShahid999"
   kaggle           : # Username  
   stackoverflow    : # User number or user number and name (i.e., use "1" or "1/jeff-atwood")    
 
   # Social media
-  bluesky          : "bsky.app" # Replace this with you Bluesky username
+  bluesky          :  # Replace this with you Bluesky username
   facebook         : # Username
   flickr           : # Username
   foursquare       : # Username
@@ -59,7 +59,7 @@ author:
   keybase          : # Username
   instagram        : # Username
   lastfm           : # Username
-  linkedin         : # Username
+  linkedin         : # Amna Shahid
   mastodon         : # URL
   medium           : # URL
   pinterest        : # Username
@@ -102,7 +102,7 @@ comments:
     num_posts            : # 5 (default)
     colorscheme          : # "light" (default), "dark"
 staticman:
-  allowedFields          : ['name', 'email', 'url', 'message']
+  allowedFields          : ['Amna Shahid', 'as7475@columbia.edu', 'https://www.linkedin.com/in/amna-shahid-/', 'message']
   branch                 : "gh-pages" # "master", "gh-pages"
   commitMessage          : "New comment."
   filename               : comment-{@timestamp}
