@@ -1,5 +1,5 @@
 ---
-title: "Practicum"
+title: "Practicum in Data Analysis"
 excerpt: "This portfolio will document the execution for the course Practicum in Data Analayis"<br/><img src='/images/500x300.png'>"
 collection: Practicum in Data Analysis
 ---
