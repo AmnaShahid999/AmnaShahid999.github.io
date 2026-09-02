@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Amna Shahid — Quantitative Analyst</title>
+<meta name="description" content="Portfolio of Amna Shahid, quantitative analyst and researcher — program evaluation, institutional research, and data operations.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<style>
+  :root{
+    --paper:#F5F3EC;
+    --ink:#1C2333;
+    --ink-soft:#4C5470;
+    --teal:#2E6E5E;
+    --teal-soft:#7FA89A;
+    --ochre:#B8823A;
+    --rule:#D9D4C6;
+    --max: 760px;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Inter', -apple-system, sans-serif;
+    font-size:17px;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  a{color:var(--teal); text-decoration:none; border-bottom:1px solid transparent;}
+  a:hover{border-bottom-color:var(--teal);}
+  a:focus-visible, button:focus-visible{outline:2px solid var(--teal); outline-offset:3px;}
+
+  .wrap{max-width:var(--max); margin:0 auto; padding:0 24px;}
+  .wrap-wide{max-width:960px; margin:0 auto; padding:0 24px;}
+
+  h1,h2,h3{
+    font-family:'Source Serif 4', Georgia, serif;
+    font-weight:500;
+    color:var(--ink);
+    margin:0;
+  }
+
+  /* ---------- header ---------- */
+  header{
+    position:sticky; top:0; z-index:10;
+    background:rgba(245,243,236,0.92);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--rule);
+  }
+  .header-inner{
+    max-width:960px; margin:0 auto; padding:18px 24px;
+    display:flex; justify-content:space-between; align-items:center;
+    flex-wrap:wrap; gap:10px;
+  }
+  .brand{font-family:'Source Serif 4', serif; font-size:1.15rem; font-weight:500;}
+  nav{display:flex; gap:24px; font-size:0.95rem;}
+  nav a{color:var(--ink-soft); border-bottom:none;}
+  nav a:hover{color:var(--teal);}
+
+  /* ---------- hero ---------- */
+  .hero{padding:64px 0 56px;}
+  .hero-inner{
+    max-width:960px; margin:0 auto; padding:0 24px;
+    display:flex; align-items:center; gap:48px;
+  }
+  .hero-text{flex:1 1 420px; min-width:280px;}
+  .hero-text h1{font-size:clamp(2.1rem, 4.4vw, 3.1rem); line-height:1.15;}
+  .hero-text p{color:var(--ink-soft); font-size:1.05rem; max-width:52ch;}
+  .hero-text p.lede{color:var(--ink); font-size:1.12rem; margin-top:18px;}
+  .hero-chart{flex:1 1 320px; min-width:260px;}
+  .hero-chart svg{width:100%; height:auto;}
+
+  .path-treatment{
+    stroke-dasharray:420;
+    stroke-dashoffset:420;
+    animation:draw 1.6s ease-out 0.2s forwards;
+  }
+  @media (prefers-reduced-motion: reduce){
+    .path-treatment{animation:none; stroke-dashoffset:0;}
+  }
+  @keyframes draw{ to{stroke-dashoffset:0;} }
+
+  /* ---------- sections ---------- */
+  section{padding:52px 0;}
+  section + section{border-top:1px solid var(--rule);}
+  .section-head{margin-bottom:28px;}
+  .section-head h2{font-size:1.5rem;}
+  .section-head p{color:var(--ink-soft); margin-top:6px; font-size:0.98rem;}
+
+  #about p{max-width:64ch;}
+  #about .facts{
+    margin-top:20px; padding-top:18px; border-top:1px solid var(--rule);
+    color:var(--ink-soft); font-size:0.95rem;
+  }
+  #about .facts div{margin-bottom:6px;}
+
+  /* ---------- projects ---------- */
+  .project{
+    display:flex; gap:36px; align-items:flex-start;
+    padding:32px 0; border-top:1px solid var(--rule);
+    flex-wrap:wrap;
+  }
+  .project:first-of-type{border-top:none; padding-top:0;}
+  .project-text{flex:1 1 400px; min-width:260px;}
+  .project-text h3{font-size:1.2rem; margin-bottom:4px;}
+  .project-meta{color:var(--ochre); font-size:0.88rem; margin-bottom:12px; font-weight:500;}
+  .project-story{
+    color:var(--ink-soft); font-style:italic; font-size:0.98rem;
+    margin:0 0 12px; padding-left:14px; border-left:2px solid var(--teal-soft);
+  }
+  .project-text p{color:var(--ink-soft); margin:0;}
+  .project-links{margin-top:12px; font-size:0.88rem;}
+  .project-links a{margin-right:18px;}
+  .project-visual{flex:0 0 170px; display:flex; justify-content:center; align-items:center;}
+  .project-visual svg{width:150px; height:110px;}
+
+  .map-panel{width:100%; flex:1 1 100%; margin-top:20px;}
+  .map-caption{font-size:0.88rem; color:var(--ink-soft); margin-bottom:10px;}
+  #dlcp-map{
+    width:100%; height:360px;
+    border:1px solid var(--rule);
+    background:#EFEDE4;
+  }
+  .map-legend{
+    display:flex; align-items:center; gap:14px; flex-wrap:wrap;
+    margin-top:10px; font-size:0.82rem; color:var(--ink-soft);
+  }
+  .map-legend .swatch-row{display:flex; align-items:center; gap:6px;}
+  .map-legend .swatch{width:14px; height:14px; display:inline-block; border:1px solid rgba(0,0,0,0.15);}
+  .map-legend .dot{width:8px; height:8px; border-radius:50%; background:var(--ochre); display:inline-block;}
+  .leaflet-popup-content{font-family:'Inter', sans-serif; font-size:0.85rem;}
+  .leaflet-popup-content strong{font-family:'Source Serif 4', serif; font-size:0.95rem;}
+
+  /* ---------- skills ---------- */
+  .skills-grid{
+    display:grid; grid-template-columns:repeat(3, 1fr); gap:32px;
+  }
+  .skills-grid h3{font-size:1rem; font-weight:600; font-family:'Inter'; margin-bottom:10px; color:var(--teal);}
+  .skills-grid ul{margin:0; padding:0; list-style:none; color:var(--ink-soft); font-size:0.95rem;}
+  .skills-grid li{padding:4px 0; border-top:1px solid var(--rule);}
+  .skills-grid li:first-child{border-top:none;}
+
+  /* ---------- writing ---------- */
+  .writing-item{padding:18px 0; border-top:1px solid var(--rule);}
+  .writing-item:first-child{border-top:none; padding-top:0;}
+  .writing-item h3{font-size:1.05rem; font-weight:500;}
+  .writing-item p{color:var(--ink-soft); margin:4px 0 0; font-size:0.95rem;}
+
+  /* ---------- contact ---------- */
+  #contact p{color:var(--ink-soft); max-width:52ch;}
+  .contact-links{margin-top:20px; display:flex; flex-direction:column; gap:10px; font-size:1.05rem;}
+
+  footer{padding:28px 0 48px; color:var(--ink-soft); font-size:0.85rem;}
+
+  @media (max-width:680px){
+    .hero-inner{flex-direction:column-reverse;}
+    .skills-grid{grid-template-columns:1fr; gap:24px;}
+    .project{gap:20px;}
+    .project-visual{flex:0 0 auto; width:100%; justify-content:flex-start;}
+    nav{gap:16px; font-size:0.88rem;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="brand">Amna Shahid</div>
+    <nav>
+      <a href="#about">About</a>
+      <a href="#projects">Projects</a>
+      <a href="#skills">Skills</a>
+      <a href="#coursework">Coursework</a>
+      <a href="#writing">Writing</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-text">
+      <h1>Building the measurements decisions get made on.</h1>
+      <p class="lede">I'm a quantitative analyst working across program evaluation, institutional research, and financial operations — an M.A. in Quantitative Methods from Columbia and a Fulbright behind it.</p>
+      <p>Recent work spans a five-index institutional quality framework, a difference-in-differences evaluation of a national health insurance program, and a data operations overhaul that saved PKR 5 million and lifted customer satisfaction to 87%.</p>
+    </div>
+    <div class="hero-chart" aria-hidden="true">
+      <svg viewBox="0 0 400 260" xmlns="http://www.w3.org/2000/svg">
+        <line x1="30" y1="220" x2="380" y2="220" stroke="var(--ink)" stroke-width="1"/>
+        <line x1="200" y1="30" x2="200" y2="220" stroke="var(--rule)" stroke-width="1" stroke-dasharray="4 4"/>
+        <text x="204" y="24" font-family="Inter" font-size="11" fill="#8b8574">program starts</text>
+
+        <path d="M30,190 C90,178 150,168 200,160" fill="none" stroke="var(--ink-soft)" stroke-width="2"/>
+        <path d="M200,160 C260,152 320,146 380,140" fill="none" stroke="var(--ink-soft)" stroke-width="2" stroke-dasharray="3 5"/>
+        <text x="384" y="144" font-family="Inter" font-size="12" fill="var(--ink-soft)">control</text>
+
+        <path class="path-treatment" d="M30,190 C90,178 150,168 200,160 C250,120 300,70 380,45" fill="none" stroke="var(--teal)" stroke-width="2.5"/>
+        <circle cx="380" cy="45" r="3.5" fill="var(--teal)"/>
+        <text x="300" y="38" font-family="Inter" font-size="12" fill="var(--teal)">treatment</text>
+
+        <line x1="380" y1="45" x2="380" y2="140" stroke="var(--ochre)" stroke-width="1" stroke-dasharray="2 3"/>
+        <text x="270" y="95" font-family="Inter" font-size="11" fill="var(--ochre)">estimated effect</text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="wrap">
+    <div class="section-head"><h2>About</h2></div>
+    <p>I design ways to measure things that are hard to measure — institutional quality, program impact, customer experience — and build the pipelines and dashboards that put those measurements in front of the people making decisions. My work sits at the intersection of causal inference, applied economics, and hands-on data engineering.</p>
+    <p>I hold an M.A. in Quantitative Methods in the Social Sciences (Data Science) from Columbia University, completed as a Fulbright Scholar, and a B.Sc. in Economics from LUMS. I'm based in Omaha, Nebraska.</p>
+    <div class="facts">
+      <div>M.A., Quantitative Methods in the Social Sciences (Data Science) — Columbia University, Fulbright Scholar</div>
+      <div>B.Sc., Economics — Lahore University of Management Sciences (LUMS)</div>
+    </div>
+  </div>
+</section>
+
+<section id="projects">
+  <div class="wrap-wide">
+    <div class="section-head">
+      <h2>Selected projects</h2>
+      <p>Eight projects spanning full-pipeline modeling, causal inference, index design, and data operations.</p>
+    </div>
+
+    <div class="project">
+      <div class="project-text">
+        <h3>Master's thesis — Happiness Across Intersections</h3>
+        <div class="project-meta">Columbia University · General Social Survey data</div>
+        <p class="project-story">This project asked whether the predictors of happiness are the same across demographic groups, or whether they diverge once income, education, and identity intersect. It set out to test that with unsupervised and supervised methods rather than assume the answer.</p>
+        <p>A full analytical pipeline: mean-imputed, VIF-checked preprocessing; unsupervised exploration with k-means clustering (validated by elbow and silhouette methods) and PCA; and class-balanced multinomial logistic regression and random forest models — including two- and three-way interaction terms — predicting self-reported happiness across demographic intersections.</p>
+        <div class="project-links">
+          <a href="https://github.com/AmnaShahid999/Projects/blob/main/thesis-1-data-preprocessing.ipynb" target="_blank" rel="noopener">Preprocessing notebook</a>
+          <a href="https://github.com/AmnaShahid999/Projects/blob/main/thesis-2-unsupervised-learning.ipynb" target="_blank" rel="noopener">Unsupervised notebook</a>
+          <a href="https://github.com/AmnaShahid999/Projects/blob/main/thesis-3-supervised-learning.ipynb" target="_blank" rel="noopener">Supervised notebook</a>
+        </div>
+      </div>
+      <div class="project-visual">
+        <svg viewBox="0 0 160 120" xmlns="http://www.w3.org/2000/svg">
+          <rect x="6" y="42" width="36" height="36" fill="none" stroke="var(--ink-soft)" stroke-width="2"/>
+          <text x="24" y="64" font-family="Inter" font-size="9" fill="var(--ink-soft)" text-anchor="middle">Prep</text>
+          <line x1="44" y1="60" x2="60" y2="60" stroke="var(--rule)" stroke-width="1.5"/>
+          <polygon points="60,56 66,60 60,64" fill="var(--rule)"/>
+          <rect x="66" y="42" width="38" height="36" fill="none" stroke="var(--teal)" stroke-width="2"/>
+          <text x="85" y="58" font-family="Inter" font-size="8" fill="var(--teal)" text-anchor="middle">Explore</text>
+          <text x="85" y="69" font-family="Inter" font-size="7" fill="var(--teal)" text-anchor="middle">k-means · PCA</text>
+          <line x1="106" y1="60" x2="122" y2="60" stroke="var(--rule)" stroke-width="1.5"/>
+          <polygon points="122,56 128,60 122,64" fill="var(--rule)"/>
+          <rect x="128" y="42" width="28" height="36" fill="none" stroke="var(--ochre)" stroke-width="2"/>
+          <text x="142" y="64" font-family="Inter" font-size="9" fill="var(--ochre)" text-anchor="middle">Model</text>
+        </svg>
+      </div>
+    </div>
+
+    <div class="project">
+      <div class="project-text">
+        <h3>QSLI — Quality of Student Learning Index</h3>
+        <div class="project-meta">Habib University</div>
+        <p class="project-story">Habib University had no single way to measure whether it was actually delivering a good education — quality lived in scattered spreadsheets and anecdotes. This project set out to build one shared, measurable definition of institutional quality that leadership could actually track.</p>
+        <p>Designed a five-index institutional quality framework — Student Learning, Academic Programs, Faculty Performance, Student Support Services, and Alumni Success — each broken into weighted components (Proficiency Gains, Curriculum Design, Teaching Effectiveness, Student Well-being, Career Trajectory, and others) with defined indicators, data sources, and collection tools mapped down to the course, program, school, and university level. Delivered as an Excel-based scoring workbook and an institutional briefing document for university leadership.</p>
+        <div class="project-links">
+          <a href="qsli-framework.pdf">View the five-index framework (PDF)</a>
+        </div>
+      </div>
+      <div class="project-visual">
+        <svg viewBox="0 0 160 120" xmlns="http://www.w3.org/2000/svg">
+          <g stroke="var(--rule)" stroke-width="1" fill="none">
+            <polygon points="80,20 130,50 120,95 40,95 30,50"/>
+          </g>
+          <g stroke="var(--teal)" stroke-width="2.5" stroke-linecap="round">
+            <line x1="80" y1="60" x2="80" y2="24"/>
+            <line x1="80" y1="60" x2="122" y2="46"/>
+            <line x1="80" y1="60" x2="112" y2="88"/>
+            <line x1="80" y1="60" x2="52" y2="90"/>
+            <line x1="80" y1="60" x2="36" y2="52"/>
+          </g>
+          <circle cx="80" cy="60" r="4" fill="var(--ochre)"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="project">
+      <div class="project-text">
+        <h3>Course evaluation response-rate analysis</h3>
+        <div class="project-meta">Habib University · Fall 2021 – Spring 2025</div>
+        <p class="project-story">Response rates to course evaluations had been declining for years, and no one knew whether that reflected genuine disengagement or just noise. This analysis set out to find exactly which students, programs, and faculty types were driving the drop.</p>
+        <p>Analyzed four years of course-evaluation response data using logistic regression to isolate which student segments, programs, course levels, and faculty designations were most likely to disengage — controlling for semester, program, and course level to find that juniors were 26% and seniors nearly 50% less likely to respond than freshmen, and full-time faculty saw 21% higher participation than visiting/adjunct faculty. Findings pinpointed specific schools, programs, and course levels for targeted intervention.</p>
+        <div class="project-links">
+          <a href="course-evaluation-response-rate-analysis.pdf">View report</a>
+        </div>
+      </div>
+      <div class="project-visual">
+        <svg viewBox="0 0 160 120" xmlns="http://www.w3.org/2000/svg">
+          <line x1="80" y1="10" x2="80" y2="110" stroke="var(--rule)" stroke-width="1"/>
+          <g stroke="var(--ink-soft)" stroke-width="2">
+            <line x1="80" y1="20" x2="40" y2="20"/>
+            <line x1="80" y1="40" x2="60" y2="40"/>
+            <line x1="80" y1="60" x2="59" y2="60"/>
+            <line x1="80" y1="80" x2="72" y2="80"/>
+          </g>
+          <line x1="80" y1="100" x2="97" y2="100" stroke="var(--teal)" stroke-width="2"/>
+          <g fill="var(--ochre)">
+            <circle cx="40" cy="20" r="3"/>
+            <circle cx="60" cy="40" r="3"/>
+            <circle cx="59" cy="60" r="3"/>
+            <circle cx="72" cy="80" r="3"/>
+          </g>
+          <circle cx="97" cy="100" r="3" fill="var(--teal)"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="project">
+      <div class="project-text">
+        <h3>Difference-in-differences evaluation</h3>
+        <div class="project-meta">Sehat Sahulat health insurance program</div>
+        <p class="project-story">Pakistan's Sehat Sahulat program was expanding fast, but expansion isn't evidence of impact — it could just as easily have coincided with health trends already underway. This evaluation set out to isolate what the program itself actually changed.</p>
+        <p>Evaluated the impact of a national health insurance program on health outcomes using a difference-in-differences design, isolating the program's effect from pre-existing trends between treated and untreated groups.</p>
+      </div>
+      <div class="project-visual">
+        <svg viewBox="0 0 160 120" xmlns="http://www.w3.org/2000/svg">
+          <line x1="14" y1="100" x2="150" y2="100" stroke="var(--ink)" stroke-width="1"/>
+          <line x1="80" y1="14" x2="80" y2="100" stroke="var(--rule)" stroke-width="1" stroke-dasharray="3 3"/>
+          <path d="M14,86 C45,82 65,78 80,74 C100,64 120,44 150,30" fill="none" stroke="var(--teal)" stroke-width="2.5"/>
+          <path d="M14,90 C45,88 65,86 80,84 C100,80 120,76 150,72" fill="none" stroke="var(--ink-soft)" stroke-width="2" stroke-dasharray="3 4"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="project">
+      <div class="project-text">
+        <h3>Applicant enrollment segmentation</h3>
+        <div class="project-meta">Institutional admissions data</div>
+        <p class="project-story">An admissions office had years of applicant records but no way to tell which applicants were actually likely to enroll versus just apply. This project set out to turn that raw, messy export into segments the admissions team could act on.</p>
+        <p>Cleaned a raw admissions export with regex-based validation — filtering out placeholder names, test accounts, and internal staff emails — then feature-engineered a multi-stage funnel (application, testing, interview, offer, enrollment) and used k-means clustering on standardized applicant features to segment applicants by enrollment likelihood, surfacing which combinations of test participation, interview attendance, and geography most predicted whether an offer converted to enrollment.</p>
+        <div class="project-links">
+          <a href="https://github.com/AmnaShahid999/Projects/blob/main/admissions-1-data-cleaning.ipynb" target="_blank" rel="noopener">Data cleaning notebook</a>
+          <a href="https://github.com/AmnaShahid999/Projects/blob/main/admissions-2-enrollment-segmentation.ipynb" target="_blank" rel="noopener">Segmentation notebook</a>
+        </div>
+      </div>
+      <div class="project-visual">
+        <svg viewBox="0 0 160 120" xmlns="http://www.w3.org/2000/svg">
+          <line x1="14" y1="100" x2="150" y2="100" stroke="var(--rule)" stroke-width="1"/>
+          <line x1="14" y1="20" x2="14" y2="100" stroke="var(--rule)" stroke-width="1"/>
+          <g fill="var(--ink-soft)">
+            <circle cx="30" cy="82" r="3"/><circle cx="38" cy="90" r="3"/><circle cx="26" cy="72" r="3"/><circle cx="42" cy="78" r="3"/>
+          </g>
+          <g fill="var(--ochre)">
+            <circle cx="80" cy="52" r="3"/><circle cx="88" cy="44" r="3"/><circle cx="76" cy="60" r="3"/><circle cx="92" cy="57" r="3"/>
+          </g>
+          <g fill="var(--teal)">
+            <circle cx="125" cy="30" r="3"/><circle cx="132" cy="38" r="3"/><circle cx="118" cy="35" r="3"/><circle cx="128" cy="24" r="3"/>
+          </g>
+        </svg>
+      </div>
+    </div>
+
+    <div class="project">
+      <div class="project-text">
+        <h3>Geospatial compliance dashboards</h3>
+        <div class="project-meta">D.C. Department of Licensing and Consumer Protection — Columbia practicum</div>
+        <p class="project-story">D.C.'s licensing department could see compliance issues in a spreadsheet but not where they clustered across the city. This practicum set out to make that geography visible so non-technical staff could act on it directly.</p>
+        <p>Joined a ward-boundary shapefile with pharmacy licensing records — entity names, license status, and location — and ward population data to map license density across Washington, D.C.'s eight wards. Originally built in Tableau with QGIS handling spatial data prep; rebuilt below as a live, embedded map from the same underlying data.</p>
+        <div class="project-links">
+          <a href="dlcp-dashboard.twbx">Original Tableau workbook (.twbx)</a>
+        </div>
+      </div>
+      <div class="project-visual">
+        <svg viewBox="0 0 160 120" xmlns="http://www.w3.org/2000/svg">
+          <g fill="var(--rule)">
+            <circle cx="20" cy="20" r="2"/><circle cx="45" cy="18" r="2"/><circle cx="70" cy="22" r="2"/><circle cx="95" cy="18" r="2"/><circle cx="120" cy="22" r="2"/><circle cx="145" cy="18" r="2"/>
+            <circle cx="20" cy="45" r="2"/><circle cx="145" cy="45" r="2"/>
+            <circle cx="20" cy="70" r="2"/><circle cx="145" cy="70" r="2"/>
+            <circle cx="20" cy="95" r="2"/><circle cx="45" cy="98" r="2"/><circle cx="70" cy="94" r="2"/><circle cx="95" cy="98" r="2"/><circle cx="120" cy="94" r="2"/><circle cx="145" cy="98" r="2"/>
+          </g>
+          <g stroke="var(--teal)" stroke-width="1.4">
+            <line x1="55" y1="50" x2="80" y2="40"/>
+            <line x1="80" y1="40" x2="105" y2="60"/>
+            <line x1="105" y1="60" x2="75" y2="75"/>
+            <line x1="75" y1="75" x2="55" y2="50"/>
+          </g>
+          <g fill="var(--teal)">
+            <circle cx="55" cy="50" r="4"/><circle cx="80" cy="40" r="4"/><circle cx="105" cy="60" r="4"/><circle cx="75" cy="75" r="4"/>
+          </g>
+          <circle cx="80" cy="40" r="4" fill="var(--ochre)"/>
+        </svg>
+      </div>
+      <div class="map-panel">
+        <p class="map-caption">38 active pharmacy licenses mapped against ward boundaries and population — hover a ward for details, click a dot for the license.</p>
+        <div id="dlcp-map"></div>
+        <div class="map-legend">
+          <span>Active licenses per ward:</span>
+          <span class="swatch-row"><span class="swatch" style="background:#E3ECE8;"></span>low</span>
+          <span class="swatch-row"><span class="swatch" style="background:#7FA89A;"></span>mid</span>
+          <span class="swatch-row"><span class="swatch" style="background:#2E6E5E;"></span>high</span>
+          <span class="swatch-row"><span class="dot"></span>pharmacy license</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="project">
+      <div class="project-text">
+        <h3>Data operations overhaul</h3>
+        <div class="project-meta">EasyPaisa / Telenor Microfinance Bank</div>
+        <p class="project-story">The auto loan process at EasyPaisa was slow and inconsistent, and the underlying customer data was too fragmented to diagnose why. This project set out to rebuild the data operations behind the process, not just patch the symptoms.</p>
+        <p>Restructured data and customer operations across more than 100,000 records using MySQL and Zendesk, and redesigned the end-to-end auto loan process — work that saved PKR 5 million and raised customer satisfaction to 87%.</p>
+      </div>
+      <div class="project-visual">
+        <svg viewBox="0 0 160 120" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="30,20 130,20 105,50 55,50" fill="none" stroke="var(--teal)" stroke-width="2"/>
+          <polygon points="55,58 105,58 90,82 70,82" fill="none" stroke="var(--teal)" stroke-width="2"/>
+          <polygon points="70,90 90,90 82,105 78,105" fill="none" stroke="var(--ochre)" stroke-width="2"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="project">
+      <div class="project-text">
+        <h3>Hospital readmissions analysis</h3>
+        <div class="project-meta">Self-directed — BigQuery, Diabetes 130-US Hospitals dataset</div>
+        <p class="project-story">Hospital readmissions are expensive and often preventable, but the claims-style data behind them is rarely analysis-ready. I built this pipeline to practice turning that raw data into readmission insight, end to end, on my own.</p>
+        <p>Built a SQL pipeline — staging tables, window functions for 30-day readmission flags, and a BI-ready mart layer — feeding a Power BI/Tableau dashboard on readmission rates, length of stay, and medication/HbA1c correlations.</p>
+      </div>
+      <div class="project-visual">
+        <svg viewBox="0 0 160 120" xmlns="http://www.w3.org/2000/svg">
+          <line x1="14" y1="100" x2="150" y2="100" stroke="var(--ink)" stroke-width="1"/>
+          <g>
+            <rect x="24" y="60" width="16" height="40" fill="var(--teal)"/>
+            <rect x="52" y="40" width="16" height="60" fill="var(--ink-soft)"/>
+            <rect x="80" y="70" width="16" height="30" fill="var(--teal)"/>
+            <rect x="108" y="30" width="16" height="70" fill="var(--ochre)"/>
+            <rect x="136" y="55" width="16" height="45" fill="var(--ink-soft)"/>
+          </g>
+        </svg>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section id="skills">
+  <div class="wrap-wide">
+    <div class="section-head"><h2>Skills</h2></div>
+    <div class="skills-grid">
+      <div>
+        <h3>Methods</h3>
+        <ul>
+          <li>Difference-in-differences</li>
+          <li>Regression (linear, logistic, multinomial)</li>
+          <li>K-means clustering &amp; PCA</li>
+          <li>Random forests</li>
+          <li>Hypothesis testing</li>
+          <li>Index design &amp; aggregation</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Tools</h3>
+        <ul>
+          <li>SQL (BigQuery, MySQL)</li>
+          <li>Python &amp; R</li>
+          <li>Excel / VBA</li>
+          <li>Power BI &amp; Tableau</li>
+          <li>QGIS</li>
+          <li>Zendesk</li>
+        </ul>
+      </div>
+      <div>
+        <h3>Domains</h3>
+        <ul>
+          <li>Development economics</li>
+          <li>Education &amp; institutional research</li>
+          <li>Healthcare analytics</li>
+          <li>Financial services operations</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="coursework">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Coursework</h2>
+      <p>Graduate applied-methods labs from Columbia's quantitative methods sequence.</p>
+    </div>
+
+    <div class="writing-item">
+      <h3>Panel regression — public expenditure and unemployment</h3>
+      <p>First-differenced fixed-effects panel model across 38 OECD countries, with clustered standard errors, testing how education and public-service spending relate to unemployment.</p>
+    </div>
+
+    <div class="writing-item">
+      <h3>Gender equality and macroeconomic variables</h3>
+      <p>Cross-country OLS and random forest models predicting a gender-equality index from governance and economic indicators, with feature-importance interpretation.</p>
+    </div>
+
+    <div class="writing-item">
+      <h3>Regression analysis — hate crime by state</h3>
+      <p>Bivariate and multivariate OLS models (R² = 0.43) examining how income inequality and education relate to hate-crime rates across U.S. states.</p>
+    </div>
+
+    <div class="writing-item">
+      <h3>Text classification and neural network</h3>
+      <p>Compared three text-vectorization approaches for a clickbait classifier (best F1 = 0.97), then tuned a Keras multilayer perceptron across several architectures.</p>
+    </div>
+  </div>
+</section>
+
+<section id="writing">
+  <div class="wrap">
+    <div class="section-head"><h2>Writing</h2></div>
+
+    <div class="writing-item">
+      <h3><a href="https://www.dawn.com/news/1722222" target="_blank" rel="noopener">FATF: honest mistakes or deliberate ignorance?</a></h3>
+      <p>Op-ed for Dawn on enforcement bias in anti-money-laundering policy.</p>
+    </div>
+
+    <div class="writing-item">
+      <h3><a href="https://ccls.lums.edu.pk/ccls-papers" target="_blank" rel="noopener">SEZs under CPEC and poverty alleviation</a></h3>
+      <p>Comparative research paper for the Centre for Chinese Legal Studies on special economic zones in Pakistan.</p>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="wrap">
+    <div class="section-head"><h2>Contact</h2></div>
+    <p>I'm currently looking for data analyst and research analyst roles. The fastest way to reach me is email.</p>
+    <div class="contact-links">
+      <a href="mailto:aamna.shahid99@gmail.com">aamna.shahid99@gmail.com</a>
+      <a href="https://www.linkedin.com/in/amna-shahid-/" target="_blank" rel="noopener">linkedin.com/in/amna-shahid-</a>
+      <a href="https://github.com/AmnaShahid999/Projects" target="_blank" rel="noopener">github.com/AmnaShahid999/Projects</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">Amna Shahid</div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+(function(){
+  var WARDS = [{"ward":8,"name":"Ward 8","pop":85246,"rings":[[[38.87771,-76.99392],[38.878,-76.99341],[38.87758,-76.99154],[38.87372,-76.99143],[38.87143,-76.99013],[38.8747,-76.98437],[38.87686,-76.97798],[38.87491,-76.97633],[38.87273,-76.97223],[38.87331,-76.97097],[38.86874,-76.97094],[38.86678,-76.97017],[38.86395,-76.97068],[38.86023,-76.96815],[38.85825,-76.96804],[38.85589,-76.96655],[38.85217,-76.96302],[38.85194,-76.96177],[38.79164,-77.03902],[38.80059,-77.03919],[38.81481,-77.03614],[38.81561,-77.03814],[38.81888,-77.03912],[38.81925,-77.03885],[38.82065,-77.03997],[38.82148,-77.03958],[38.82211,-77.04072],[38.82335,-77.04105],[38.82467,-77.0388],[38.83015,-77.03784],[38.83209,-77.03916],[38.83371,-77.04188],[38.83335,-77.04258],[38.83148,-77.04194],[38.83112,-77.04268],[38.83146,-77.04329],[38.83337,-77.04383],[38.83316,-77.04449],[38.83354,-77.04424],[38.83576,-77.04505],[38.83585,-77.0456],[38.83609,-77.04505],[38.83849,-77.04536],[38.8399,-77.0465],[38.84012,-77.04589],[38.84065,-77.04748],[38.84127,-77.0479],[38.84118,-77.04607],[38.84022,-77.04468],[38.84056,-77.04336],[38.83974,-77.04291],[38.83928,-77.04005],[38.83941,-77.03681],[38.84005,-77.03465],[38.84686,-77.03253],[38.85066,-77.0322],[38.86342,-77.00912],[38.86856,-77.00585],[38.86988,-77.00907],[38.87648,-77.0091],[38.87649,-77.00416],[38.88052,-77.00562],[38.88052,-77.0035],[38.87771,-76.99392]]]},{"ward":6,"name":"Ward 6","pop":84266,"rings":[[[38.87162,-77.00908],[38.86988,-77.00907],[38.86856,-77.00585],[38.86342,-77.00912],[38.85066,-77.0322],[38.85509,-77.03286],[38.85937,-77.03507],[38.86111,-77.03679],[38.8613,-77.03761],[38.86325,-77.03802],[38.86327,-77.03969],[38.86238,-77.04037],[38.86338,-77.04277],[38.86404,-77.03823],[38.86519,-77.03774],[38.86743,-77.03828],[38.87055,-77.03997],[38.87424,-77.04381],[38.87897,-77.03919],[38.88048,-77.03432],[38.88345,-77.03216],[38.88758,-77.03195],[38.88757,-77.01518],[38.89146,-77.01519],[38.89277,-77.0199],[38.89442,-77.0199],[38.89481,-77.01894],[38.90113,-77.01893],[38.90211,-77.02192],[38.90295,-77.02192],[38.9089,-77.0046],[38.90016,-76.98361],[38.88109,-76.98366],[38.88298,-76.979],[38.88275,-76.97647],[38.88144,-76.97647],[38.88143,-76.97097],[38.87838,-76.97342],[38.87519,-76.98324],[38.87143,-76.99013],[38.87372,-76.99143],[38.87758,-76.99154],[38.878,-76.99341],[38.87764,-76.99368],[38.88052,-77.0035],[38.88052,-77.00562],[38.87649,-77.00416],[38.87648,-77.0091],[38.87162,-77.00908]]]},{"ward":7,"name":"Ward 7","pop":85685,"rings":[[[38.91854,-76.94186],[38.89293,-76.90915],[38.85194,-76.96177],[38.85196,-76.96261],[38.85442,-76.96536],[38.8575,-76.96765],[38.86023,-76.96815],[38.86415,-76.97076],[38.86678,-76.97017],[38.86874,-76.97094],[38.87331,-76.97097],[38.87273,-76.97223],[38.87491,-76.97633],[38.87686,-76.97798],[38.87838,-76.97342],[38.88143,-76.97097],[38.88144,-76.97647],[38.88275,-76.97647],[38.88298,-76.979],[38.88109,-76.98366],[38.90016,-76.98361],[38.89772,-76.96964],[38.89707,-76.96191],[38.89984,-76.96215],[38.90259,-76.95984],[38.90747,-76.95721],[38.91116,-76.9543],[38.91439,-76.9535],[38.91482,-76.95242],[38.91512,-76.94639],[38.91854,-76.94186]]]},{"ward":2,"name":"Ward 2","pop":89485,"rings":[[[38.88262,-77.0327],[38.88004,-77.03492],[38.87897,-77.03919],[38.87424,-77.04381],[38.87556,-77.0457],[38.87516,-77.04704],[38.87242,-77.04623],[38.87184,-77.04677],[38.87129,-77.04918],[38.87172,-77.05031],[38.87391,-77.05169],[38.87616,-77.05142],[38.87692,-77.05176],[38.88014,-77.05475],[38.88063,-77.0589],[38.88785,-77.06379],[38.88948,-77.06442],[38.89028,-77.06379],[38.89719,-77.06724],[38.89953,-77.06773],[38.90119,-77.07058],[38.90112,-77.07334],[38.90238,-77.07829],[38.90675,-77.07832],[38.90675,-77.07789],[38.90951,-77.07764],[38.91264,-77.07946],[38.91276,-77.07881],[38.9137,-77.07909],[38.91504,-77.08056],[38.91744,-77.08171],[38.91743,-77.07573],[38.91686,-77.07572],[38.91688,-77.07489],[38.91653,-77.07487],[38.91633,-77.07153],[38.91661,-77.06941],[38.91773,-77.06938],[38.91697,-77.06875],[38.9175,-77.06762],[38.91868,-77.06731],[38.91832,-77.05909],[38.91768,-77.0582],[38.919,-77.05534],[38.91989,-77.05467],[38.91978,-77.05122],[38.92131,-77.05022],[38.91896,-77.04885],[38.91842,-77.04758],[38.91611,-77.04637],[38.91439,-77.04617],[38.91702,-77.04123],[38.91701,-77.03195],[38.9141,-77.03195],[38.91409,-77.02087],[38.91575,-77.02066],[38.91465,-77.01811],[38.90537,-77.01478],[38.90295,-77.02192],[38.90211,-77.02192],[38.90113,-77.01893],[38.89481,-77.01894],[38.89442,-77.0199],[38.89277,-77.0199],[38.89146,-77.01519],[38.88757,-77.01518],[38.88758,-77.03195],[38.88409,-77.03202],[38.88262,-77.0327]]]},{"ward":1,"name":"Ward 1","pop":85285,"rings":[[[38.93743,-77.03523],[38.93511,-77.02531],[38.93634,-77.0243],[38.93741,-77.01904],[38.93419,-77.01917],[38.92917,-77.01795],[38.92852,-77.01824],[38.92646,-77.01483],[38.92629,-77.01214],[38.92131,-77.01215],[38.92068,-77.01494],[38.915,-77.01427],[38.91377,-77.01778],[38.91465,-77.01811],[38.91575,-77.02066],[38.91409,-77.02087],[38.9141,-77.03195],[38.91701,-77.03195],[38.91702,-77.04123],[38.91439,-77.04617],[38.91611,-77.04637],[38.91842,-77.04758],[38.91896,-77.04885],[38.92131,-77.05022],[38.92301,-77.04854],[38.92773,-77.04985],[38.92806,-77.04906],[38.92596,-77.046],[38.92671,-77.04479],[38.92834,-77.04451],[38.93155,-77.04723],[38.93231,-77.05041],[38.93297,-77.05088],[38.93481,-77.0483],[38.9359,-77.04539],[38.93625,-77.04104],[38.93824,-77.03645],[38.93743,-77.03645],[38.93743,-77.03523]]]},{"ward":5,"name":"Ward 5","pop":89617,"rings":[[[38.9573,-76.99144],[38.91854,-76.94186],[38.91512,-76.94639],[38.91482,-76.95242],[38.91439,-76.9535],[38.91116,-76.9543],[38.90747,-76.95721],[38.90259,-76.95984],[38.89984,-76.96215],[38.89707,-76.96191],[38.89772,-76.96964],[38.90021,-76.98422],[38.9089,-77.0046],[38.90537,-77.01478],[38.91377,-77.01778],[38.915,-77.01427],[38.92068,-77.01494],[38.92131,-77.01215],[38.92629,-77.01214],[38.92646,-77.01483],[38.92852,-77.01824],[38.92917,-77.01795],[38.93419,-77.01917],[38.93741,-77.01904],[38.93812,-77.0171],[38.93981,-77.01522],[38.94383,-77.01215],[38.94622,-77.00877],[38.95482,-77.00905],[38.95606,-77.00337],[38.95682,-77.00225],[38.9553,-77.00028],[38.95723,-76.99758],[38.9573,-76.99144]]]},{"ward":3,"name":"Ward 3","pop":85301,"rings":[[[38.95676,-77.05808],[38.9568,-77.05735],[38.95865,-77.05607],[38.96102,-77.0562],[38.96189,-77.05189],[38.96182,-77.05042],[38.96077,-77.04881],[38.96039,-77.04722],[38.96058,-77.04519],[38.96137,-77.04344],[38.96015,-77.04181],[38.95983,-77.04057],[38.95781,-77.04212],[38.95462,-77.04222],[38.95231,-77.04467],[38.95069,-77.04551],[38.94958,-77.04708],[38.94823,-77.04685],[38.94778,-77.04557],[38.9486,-77.04447],[38.94789,-77.04409],[38.94551,-77.04598],[38.94568,-77.04784],[38.94358,-77.04992],[38.94142,-77.05132],[38.94038,-77.0512],[38.93814,-77.05214],[38.93762,-77.05187],[38.93719,-77.05041],[38.93706,-77.04795],[38.93506,-77.04803],[38.9328,-77.05091],[38.93129,-77.04691],[38.9287,-77.04463],[38.92671,-77.04479],[38.92598,-77.04642],[38.92806,-77.04906],[38.92807,-77.0497],[38.92553,-77.04943],[38.92452,-77.04873],[38.92247,-77.04868],[38.92131,-77.05022],[38.91978,-77.05122],[38.91989,-77.05467],[38.919,-77.05534],[38.91768,-77.0582],[38.91832,-77.05909],[38.91868,-77.06731],[38.9175,-77.06762],[38.91697,-77.06875],[38.91773,-77.06938],[38.91661,-77.06941],[38.91633,-77.07153],[38.91653,-77.07487],[38.91688,-77.07489],[38.91686,-77.07572],[38.91743,-77.07573],[38.91744,-77.08171],[38.91504,-77.08056],[38.9137,-77.07909],[38.91276,-77.07881],[38.91264,-77.07946],[38.90951,-77.07764],[38.90675,-77.07789],[38.90675,-77.07832],[38.90238,-77.07829],[38.90227,-77.08279],[38.90319,-77.08759],[38.90584,-77.09348],[38.90853,-77.09782],[38.91275,-77.10307],[38.91597,-77.10416],[38.91995,-77.10684],[38.92465,-77.11266],[38.92816,-77.11601],[38.9321,-77.11752],[38.93435,-77.1198],[38.97193,-77.07174],[38.9697,-77.07014],[38.95849,-77.06513],[38.95756,-77.05925],[38.95676,-77.05808]]]},{"ward":4,"name":"Ward 4","pop":84660,"rings":[[[38.99597,-77.04097],[38.9573,-76.99144],[38.95723,-76.99758],[38.9553,-77.00028],[38.95682,-77.00225],[38.95606,-77.00337],[38.95482,-77.00905],[38.94707,-77.0086],[38.94592,-77.00899],[38.94383,-77.01215],[38.93981,-77.01522],[38.93793,-77.01734],[38.93634,-77.0243],[38.93513,-77.0252],[38.93739,-77.03387],[38.93743,-77.03645],[38.93824,-77.03645],[38.93625,-77.04104],[38.93597,-77.04509],[38.93481,-77.0483],[38.93575,-77.04779],[38.9372,-77.04808],[38.93762,-77.05187],[38.93814,-77.05214],[38.94038,-77.0512],[38.94142,-77.05132],[38.94358,-77.04992],[38.94568,-77.04784],[38.94551,-77.04598],[38.94789,-77.04409],[38.9486,-77.04447],[38.94778,-77.04557],[38.94823,-77.04685],[38.94958,-77.04708],[38.95069,-77.04551],[38.95231,-77.04467],[38.95462,-77.04222],[38.95781,-77.04212],[38.95983,-77.04057],[38.96015,-77.04181],[38.96137,-77.04344],[38.96058,-77.04519],[38.96039,-77.04722],[38.96195,-77.05145],[38.96102,-77.0562],[38.95882,-77.05601],[38.95674,-77.05748],[38.95766,-77.05968],[38.95849,-77.06513],[38.9697,-77.07014],[38.97193,-77.07174],[38.99597,-77.04097]]]}];
+  var PHARMACIES = [{"name":"Walgreens #16049","lat":38.9178,"lon":-77.02092,"ward":1,"endorsement":"Patent Medicine"},{"name":"Cvs/Pharmacy #1354","lat":38.92382,"lon":-77.05132,"ward":3,"endorsement":"Patent Medicine"},{"name":"District Of Columbia Cvs Pharmacy Llc","lat":38.88382,"lon":-77.02589,"ward":6,"endorsement":"Patent Medicine"},{"name":"Cvs/Pharmacy#1332","lat":38.89903,"lon":-77.05481,"ward":2,"endorsement":"Patent Medicine"},{"name":"District Of Columbia Cvs Pharmacy Llc","lat":38.88447,"lon":-76.99648,"ward":6,"endorsement":"Patent Medicine"},{"name":"Cvs/Pharmacy #6214","lat":38.96013,"lon":-77.08484,"ward":3,"endorsement":"Patent Medicine"},{"name":"District Of Columbia Cvs Pharmacy Llc","lat":38.90341,"lon":-77.04578,"ward":2,"endorsement":"Patent Medicine"},{"name":"District Of Columbia Cvs Pharmacy Llc","lat":38.86194,"lon":-76.96839,"ward":7,"endorsement":"Patent Medicine"},{"name":"District Of Columbia Cvs Pharmacy Llc","lat":38.89812,"lon":-77.04059,"ward":2,"endorsement":"Patent Medicine"},{"name":"District Of Columbia Cvs Pharmacy Llc","lat":38.90219,"lon":-77.03494,"ward":2,"endorsement":"Patent Medicine"},{"name":"Cvs/Pharmacy #6419","lat":38.91671,"lon":-77.0263,"ward":1,"endorsement":"Patent Medicine"},{"name":"Cvs/Pharmacy","lat":38.88469,"lon":-77.02942,"ward":6,"endorsement":"Patent Medicine"},{"name":"District Of Columbia Cvs Pharmacy, L.L.C.","lat":38.90837,"lon":-77.04309,"ward":2,"endorsement":"Patent Medicine"},{"name":"Genoa Healthcare Of Washington D.C., Llc","lat":38.88364,"lon":-76.99454,"ward":6,"endorsement":"Patent Medicine"},{"name":"Morton 8Th St Pharmacy L.L.C.","lat":38.89005,"lon":-76.99518,"ward":6,"endorsement":"Patent Medicine"},{"name":"Umbrella Health Services Llc","lat":38.92058,"lon":-77.02165,"ward":1,"endorsement":"Patent Medicine"},{"name":"Cvs/Pharmacy #7174","lat":38.90608,"lon":-77.0063,"ward":6,"endorsement":"Patent Medicine"},{"name":"Flexcare Pharmacy, Llc","lat":38.86636,"lon":-76.94976,"ward":7,"endorsement":"Patent Medicine"},{"name":"District Of Columbia Cvs Pharmacy Llc","lat":38.90068,"lon":-77.0438,"ward":2,"endorsement":"Patent Medicine"},{"name":"Cvs Pharmacy","lat":38.89812,"lon":-77.04059,"ward":2,"endorsement":"Patent Medicine"},{"name":"Kalorama Care Pharmacy","lat":38.92149,"lon":-77.04383,"ward":1,"endorsement":"Patent Medicine"},{"name":"District Of Columbia Cvs Pharmacy Llc","lat":38.91584,"lon":-77.02224,"ward":1,"endorsement":"Patent Medicine"},{"name":"District Of Columbia Cvs Pharmacy Llc","lat":38.89594,"lon":-77.02273,"ward":2,"endorsement":"Patent Medicine"},{"name":"Peoples Drug Store Llc","lat":38.91238,"lon":-77.03808,"ward":2,"endorsement":"Patent Medicine"},{"name":"District Of Columbia Cvs Pharmacy Llc","lat":38.90478,"lon":-77.02572,"ward":2,"endorsement":"Patent Medicine"},{"name":"Dedicated Care Health Services, Inc.","lat":38.98216,"lon":-77.02697,"ward":4,"endorsement":"Patent Medicine"},{"name":"Walgreens #19080","lat":38.95763,"lon":-77.02863,"ward":4,"endorsement":"Patent Medicine"},{"name":"Velima Pharmacy Inc","lat":38.88936,"lon":-76.93672,"ward":7,"endorsement":"Patent Medicine"},{"name":"Van Ness Pharmacy Llc","lat":38.94364,"lon":-77.06284,"ward":3,"endorsement":"Patent Medicine"},{"name":"Grubb'S Nw Specialty Pharmacy","lat":38.9103,"lon":-77.03824,"ward":2,"endorsement":"Patent Medicine"},{"name":"Goodcare Pharmacy Inc","lat":38.8457,"lon":-76.99657,"ward":8,"endorsement":"Patent Medicine"},{"name":"District Of Columbia Cvs Pharmacy, L.L.C.","lat":38.88384,"lon":-77.02517,"ward":6,"endorsement":"Patent Medicine"},{"name":"District Of Columbia Cvs Pharmacy Llc","lat":38.88586,"lon":-77.01877,"ward":6,"endorsement":"Patent Medicine"},{"name":"District Of Columbia Cvs Pharmacy, Llc","lat":38.89903,"lon":-77.05481,"ward":2,"endorsement":"Patent Medicine"},{"name":"Triple Alliance Pharmacy Inc.","lat":38.9108,"lon":-76.98475,"ward":5,"endorsement":"Patent Medicine"},{"name":"State Pharmacy Inc.","lat":38.86592,"lon":-76.98983,"ward":8,"endorsement":"Patent Medicine"},{"name":"Walgreens #19546","lat":38.82188,"lon":-77.00281,"ward":8,"endorsement":"Patent Medicine"},{"name":"Cvs/Pharmacy #1351","lat":38.92387,"lon":-77.04144,"ward":1,"endorsement":"Patent Medicine"}];
+
+  function initDlcpMap(){
+    var el = document.getElementById('dlcp-map');
+    if(!el || typeof L === 'undefined') return;
+
+    var map = L.map('dlcp-map', { scrollWheelZoom: false }).setView([38.9072, -77.0195], 11);
+
+    var counts = WARDS.map(function(w){
+      return PHARMACIES.filter(function(p){ return p.ward === w.ward; }).length;
+    });
+    var maxCount = Math.max.apply(null, counts);
+    var minCount = Math.min.apply(null, counts);
+
+    function colorFor(count){
+      var t = maxCount === minCount ? 0.5 : (count - minCount) / (maxCount - minCount);
+      var c1 = [227, 236, 232];   // light
+      var c2 = [46, 110, 94];     // var(--teal)
+      var r = Math.round(c1[0] + (c2[0]-c1[0])*t);
+      var g = Math.round(c1[1] + (c2[1]-c1[1])*t);
+      var b = Math.round(c1[2] + (c2[2]-c1[2])*t);
+      return 'rgb(' + r + ',' + g + ',' + b + ')';
+    }
+
+    WARDS.forEach(function(w){
+      var count = PHARMACIES.filter(function(p){ return p.ward === w.ward; }).length;
+      var rate = (count / w.pop * 10000).toFixed(1);
+      w.rings.forEach(function(ring){
+        var poly = L.polygon(ring, {
+          color: '#1C2333',
+          weight: 1,
+          opacity: 0.35,
+          fillColor: colorFor(count),
+          fillOpacity: 0.75
+        }).addTo(map);
+        poly.bindTooltip(
+          '<strong>Ward ' + w.ward + '</strong><br>Population: ' + w.pop.toLocaleString() +
+          '<br>Active pharmacy licenses: ' + count +
+          '<br>Rate: ' + rate + ' per 10,000 residents',
+          { sticky: true }
+        );
+      });
+    });
+
+    PHARMACIES.forEach(function(p){
+      var marker = L.circleMarker([p.lat, p.lon], {
+        radius: 5,
+        color: '#8a5a1f',
+        weight: 1,
+        fillColor: '#B8823A',
+        fillOpacity: 0.9
+      }).addTo(map);
+      marker.bindPopup('<strong>' + p.name + '</strong><br>Ward ' + p.ward + (p.endorsement ? '<br>' + p.endorsement : ''));
+    });
+  }
+
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', initDlcpMap);
+  } else {
+    initDlcpMap();
+  }
+})();
+</script>
+</body>
+</html>
