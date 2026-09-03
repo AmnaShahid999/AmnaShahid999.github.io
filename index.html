@@ -239,9 +239,9 @@
         <p class="project-story">This project asked whether the predictors of happiness are the same across demographic groups, or whether they diverge once income, education, and identity intersect. It set out to test that with unsupervised and supervised methods rather than assume the answer.</p>
         <p>A full analytical pipeline: mean-imputed, VIF-checked preprocessing; unsupervised exploration with k-means clustering (validated by elbow and silhouette methods) and PCA; and class-balanced multinomial logistic regression and random forest models — including two- and three-way interaction terms — predicting self-reported happiness across demographic intersections.</p>
         <div class="project-links">
-          <a href="https://github.com/AmnaShahid999/Projects/blob/main/thesis-1-data-preprocessing.ipynb" target="_blank" rel="noopener">Preprocessing notebook</a>
-          <a href="https://github.com/AmnaShahid999/Projects/blob/main/thesis-2-unsupervised-learning.ipynb" target="_blank" rel="noopener">Unsupervised notebook</a>
-          <a href="https://github.com/AmnaShahid999/Projects/blob/main/thesis-3-supervised-learning.ipynb" target="_blank" rel="noopener">Supervised notebook</a>
+          <a href="thesis-1-data-preprocessing.html">Preprocessing notebook</a>
+          <a href="thesis-2-unsupervised-learning.html">Unsupervised notebook</a>
+          <a href="thesis-3-supervised-learning.html">Supervised notebook</a>
         </div>
       </div>
       <div class="project-visual">
@@ -322,9 +322,12 @@
     <div class="project">
       <div class="project-text">
         <h3>Difference-in-differences evaluation</h3>
-        <div class="project-meta">Sehat Sahulat health insurance program</div>
+        <div class="project-meta">KP Sehat Sahulat Program &middot; Econometrics term project, Group 1</div>
         <p class="project-story">Pakistan's Sehat Sahulat program was expanding fast, but expansion isn't evidence of impact — it could just as easily have coincided with health trends already underway. This evaluation set out to isolate what the program itself actually changed.</p>
-        <p>Evaluated the impact of a national health insurance program on health outcomes using a difference-in-differences design, isolating the program's effect from pre-existing trends between treated and untreated groups.</p>
+        <p>Led the modeling, data analysis, and robustness testing on this team project (co-authored with three classmates): a baseline regression linking household characteristics to infant mortality, then a difference-in-differences design using Khyber Pakhtunkhwa as treatment and Sindh/Punjab as controls. The DID estimate (&minus;0.026, p&lt;0.1) indicates the program reduced infant mortality by roughly 2.6 percentage points; robustness checks confirmed low multicollinearity (VIF 1.08) and addressed heteroskedasticity with robust standard errors.</p>
+        <div class="project-links">
+          <a href="did-sehat-sahulat-evaluation.pdf">View report</a>
+        </div>
       </div>
       <div class="project-visual">
         <svg viewBox="0 0 160 120" xmlns="http://www.w3.org/2000/svg">
@@ -343,8 +346,8 @@
         <p class="project-story">An admissions office had years of applicant records but no way to tell which applicants were actually likely to enroll versus just apply. This project set out to turn that raw, messy export into segments the admissions team could act on.</p>
         <p>Cleaned a raw admissions export with regex-based validation — filtering out placeholder names, test accounts, and internal staff emails — then feature-engineered a multi-stage funnel (application, testing, interview, offer, enrollment) and used k-means clustering on standardized applicant features to segment applicants by enrollment likelihood, surfacing which combinations of test participation, interview attendance, and geography most predicted whether an offer converted to enrollment.</p>
         <div class="project-links">
-          <a href="https://github.com/AmnaShahid999/Projects/blob/main/admissions-1-data-cleaning.ipynb" target="_blank" rel="noopener">Data cleaning notebook</a>
-          <a href="https://github.com/AmnaShahid999/Projects/blob/main/admissions-2-enrollment-segmentation.ipynb" target="_blank" rel="noopener">Segmentation notebook</a>
+          <a href="admissions-1-data-cleaning.html">Data cleaning notebook</a>
+          <a href="admissions-2-enrollment-segmentation.html">Segmentation notebook</a>
         </div>
       </div>
       <div class="project-visual">
