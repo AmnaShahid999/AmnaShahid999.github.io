@@ -1,4 +1,4 @@
-# Portfolio site — deploy to GitHub Pages (free)
+# Portfolio site 
 
 Everything is flat files, all in one place — no folders, no second repo needed.
 
@@ -26,13 +26,3 @@ Everything is flat files, all in one place — no folders, no second repo needed
 4. Your site will be live at `https://amnashahid999.github.io` within a few
    minutes — every project link, PDF, and notebook page working directly
    from your own site.
-
-## Using a custom domain later
-Buy a domain from any registrar, then add a `CNAME` file to the repo and
-point the domain's DNS at GitHub's servers — GitHub's own Pages docs walk
-through this when you get there.
-
-## Updating content later
-Everything — text, project descriptions, links — lives in plain HTML in
-`index.html`. Open it in any text editor (or hand it back to Claude) to
-update copy, add a new project block, or swap contact details.
