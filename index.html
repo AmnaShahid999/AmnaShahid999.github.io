@@ -426,12 +426,21 @@
       </div>
     </div>
 
-    <div class="project">
+       <div class="project">
       <div class="project-text">
         <h3>Hospital readmissions analysis</h3>
         <div class="project-meta">Self-directed — BigQuery, Diabetes 130-US Hospitals dataset</div>
         <p class="project-story">Hospital readmissions are expensive and often preventable, but the claims-style data behind them is rarely analysis-ready. I built this pipeline to practice turning that raw data into readmission insight, end to end, on my own.</p>
-        <p>Built a SQL pipeline — staging tables, window functions for 30-day readmission flags, and a BI-ready mart layer — feeding a Power BI/Tableau dashboard on readmission rates, length of stay, and medication/HbA1c correlations.</p>
+        <p>Built a SQL pipeline across 101,710 encounters — CASE-derived utilization, complexity, and risk categories, subqueries and CTEs, JOINs, and window functions feeding a validated analytical table and a Tableau dashboard on readmission by risk, utilization, and complexity.</p>
+        <div class="project-links">
+          <a href="healthcare-dashboard.html">View dashboard</a>
+          <a href="Healthcare_Encounter_Utilization-Readmission_Analysis.twbx">Tableau workbook (.twbx)</a>
+          <a href="healthcare-1-risk-categorization.html">Risk categorization</a>
+          <a href="healthcare-2-subqueries-ctes.html">Subqueries &amp; CTEs</a>
+          <a href="healthcare-3-joins.html">Joins</a>
+          <a href="healthcare-4-analytical-table.html">Analytical table</a>
+          <a href="healthcare-5-window-functions.html">Window functions</a>
+        </div>
       </div>
       <div class="project-visual">
         <svg viewBox="0 0 160 120" xmlns="http://www.w3.org/2000/svg">
@@ -446,7 +455,7 @@
         </svg>
       </div>
     </div>
-
+    
   </div>
 </section>
 
