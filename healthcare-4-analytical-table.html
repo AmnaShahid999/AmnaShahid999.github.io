@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>4. Building &amp; Validating the Analytical Table — Amna Shahid</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/sql.min.js"></script>
+<style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+    color: #1a1a1a;
+    line-height: 1.55;
+    background: #fff;
+  }
+  a { color: #0b5fff; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .backlink { font-size: 0.9em; margin-bottom: 28px; display: inline-block; }
+  h1 { font-size: 1.5em; margin-bottom: 4px; }
+  .subtitle { color: #666; font-size: 0.95em; margin-bottom: 28px; }
+  .step { margin: 36px 0; }
+  .step h2 {
+    font-size: 1.05em;
+    background: #f4f6f8;
+    padding: 10px 14px;
+    border-left: 3px solid #0b5fff;
+    margin-bottom: 10px;
+  }
+  .step p.note { color: #444; font-size: 0.95em; margin: 8px 0 12px; }
+  pre {
+    background: #f6f8fa;
+    border-radius: 6px;
+    padding: 16px;
+    overflow-x: auto;
+    font-size: 0.85em;
+    border: 1px solid #e3e6e8;
+  }
+  code { font-family: "SF Mono", Menlo, Consolas, monospace; }
+  .pagenav {
+    margin-top: 60px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+    font-size: 0.9em;
+    color: #666;
+  }
+</style>
+</head>
+<body>
+<a class="backlink" href="index.html#projects">&larr; Back to portfolio</a>
+<h1>4. Building &amp; Validating the Analytical Table</h1>
+<div class="subtitle">Consolidating all derived logic into one permanent table, with explicit validation checks on every derived field.</div>
+<div class="step">
+<h2>Building the permanent analytical table</h2>
+<p class="note">Rather than re-deriving Utilization, Complexity, and Risk in every query, they're computed once into a permanent table — this is also where the earlier utilization bug (an accidental <= instead of >=) gets caught and fixed for good.</p>
+<pre><code class="language-sql">CREATE OR REPLACE TABLE `diabetes.encounter_analysis` AS
+WITH encounter_categories AS (
+  SELECT
+    encounter_id, patient_nbr, race, gender, age,
+    time_in_hospital, num_lab_procedures, num_procedures, num_medications,
+    number_outpatient, number_emergency, number_inpatient, number_diagnoses,
+    A1Cresult, max_glu_serum, change, diabetesMed, readmitted,
+
+    CASE WHEN number_emergency &gt;= 2 OR number_inpatient &gt;= 2
+      THEN &#x27;High Utilization&#x27; ELSE &#x27;Low Utilization&#x27; END AS Utilization_Category,
+
+    CASE WHEN number_diagnoses &gt;= 8 OR num_medications &gt;= 15
+      THEN &#x27;High Complexity&#x27; ELSE &#x27;Low Complexity&#x27; END AS Complexity_Category,
+
+    CASE WHEN readmitted = &#x27;&lt;30&#x27;
+      THEN &#x27;Within 30 days&#x27; ELSE &#x27;Not within 30 days&#x27; END AS day30_readmission
+
+  FROM `diabetes.staging_diabetic_data`
+)
+SELECT
+  *,
+  CASE WHEN Utilization_Category = &#x27;High Utilization&#x27;
+        AND Complexity_Category = &#x27;High Complexity&#x27;
+       THEN &#x27;High Risk&#x27; ELSE &#x27;Low Risk&#x27; END AS Risk_Category
+FROM encounter_categories;</code></pre>
+</div>
+<div class="step">
+<h2>Validating row counts and keys</h2>
+<p class="note">The table should have exactly as many rows as the source, and encounter_id — the grain of this table — should never repeat.</p>
+<pre><code class="language-sql">SELECT COUNT(*) AS staging_rows FROM `diabetes.staging_diabetic_data`;
+SELECT COUNT(*) AS analysis_rows FROM `diabetes.encounter_analysis`;
+
+SELECT encounter_id, COUNT(*) AS n
+FROM `diabetes.encounter_analysis`
+GROUP BY encounter_id
+HAVING n &gt;= 2;</code></pre>
+</div>
+<div class="step">
+<h2>Validating the derived logic itself</h2>
+<p class="note">It's not enough to check that the columns exist — each CASE statement's logic needs to be checked against the raw fields it was built from. Each of these three checks should return zero.</p>
+<pre><code class="language-sql">-- Should return 0: no encounter should be flagged High Utilization
+-- unless it actually meets the threshold.
+SELECT COUNTIF(Utilization_Category = &#x27;High Utilization&#x27;) AS should_be_zero
+FROM `diabetes.encounter_analysis`
+WHERE number_emergency &lt; 2 AND number_inpatient &lt; 2;
+
+-- Should return 0: same check for Complexity.
+SELECT COUNTIF(Complexity_Category = &#x27;High Complexity&#x27;) AS should_be_zero
+FROM `diabetes.encounter_analysis`
+WHERE number_diagnoses &lt; 8 AND num_medications &lt; 15;
+
+-- Should return 0: High Risk requires both flags, not just one.
+SELECT COUNTIF(Risk_Category = &#x27;High Risk&#x27;) AS should_be_zero
+FROM `diabetes.encounter_analysis`
+WHERE Complexity_Category != &#x27;High Complexity&#x27;
+   OR Utilization_Category != &#x27;High Utilization&#x27;;</code></pre>
+</div>
+<div class="step">
+<h2>Sanity-checking against the baseline</h2>
+<p class="note">Final check: the overall averages in the new table should match the baseline profiling numbers from Day 1 — if they don't, something broke in the build.</p>
+<pre><code class="language-sql">SELECT
+  COUNT(*) AS total_encounters,
+  ROUND(AVG(time_in_hospital), 2) AS avg_time_in_hospital,
+  ROUND(AVG(num_medications), 2) AS avg_num_medications,
+  ROUND(AVG(number_diagnoses), 2) AS avg_number_diagnoses
+FROM `diabetes.encounter_analysis`;</code></pre>
+</div>
+
+<div class="pagenav">Part 4 of 5 &middot; <a href="healthcare-1-risk-categorization.html">1</a> &middot; <a href="healthcare-2-subqueries-ctes.html">2</a> &middot; <a href="healthcare-3-joins.html">3</a> &middot; <a href="healthcare-4-analytical-table.html">4</a> &middot; <a href="healthcare-5-window-functions.html">5</a></div>
+<script>hljs.highlightAll();</script>
+</body>
+</html>

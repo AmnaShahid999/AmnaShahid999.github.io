@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>5. Window Functions &amp; Advanced Risk Analysis — Amna Shahid</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/sql.min.js"></script>
+<style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+    color: #1a1a1a;
+    line-height: 1.55;
+    background: #fff;
+  }
+  a { color: #0b5fff; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .backlink { font-size: 0.9em; margin-bottom: 28px; display: inline-block; }
+  h1 { font-size: 1.5em; margin-bottom: 4px; }
+  .subtitle { color: #666; font-size: 0.95em; margin-bottom: 28px; }
+  .step { margin: 36px 0; }
+  .step h2 {
+    font-size: 1.05em;
+    background: #f4f6f8;
+    padding: 10px 14px;
+    border-left: 3px solid #0b5fff;
+    margin-bottom: 10px;
+  }
+  .step p.note { color: #444; font-size: 0.95em; margin: 8px 0 12px; }
+  pre {
+    background: #f6f8fa;
+    border-radius: 6px;
+    padding: 16px;
+    overflow-x: auto;
+    font-size: 0.85em;
+    border: 1px solid #e3e6e8;
+  }
+  code { font-family: "SF Mono", Menlo, Consolas, monospace; }
+  .pagenav {
+    margin-top: 60px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+    font-size: 0.9em;
+    color: #666;
+  }
+</style>
+</head>
+<body>
+<a class="backlink" href="index.html#projects">&larr; Back to portfolio</a>
+<h1>5. Window Functions &amp; Advanced Risk Analysis</h1>
+<div class="subtitle">Peer-group comparisons via window functions, leading to the project's core readmission-vs-risk finding.</div>
+<div class="step">
+<h2>Why a window function instead of GROUP BY</h2>
+<p class="note">GROUP BY collapses every row in a group into one summary row. A window function computes the same group-level average but keeps every individual encounter_id visible alongside it — necessary for comparing one patient's stay to their peer-group average.</p>
+<pre><code class="language-sql">SELECT
+  encounter_id,
+  age,
+  time_in_hospital,
+  ROUND(AVG(time_in_hospital) OVER (PARTITION BY age), 2) AS avg_stay_for_age_group
+FROM `diabetes.encounter_analysis`;</code></pre>
+</div>
+<div class="step">
+<h2>Flagging above/below peer average</h2>
+<p class="note">Once the window average is available per row, a CASE statement turns it into a simple two-category comparison.</p>
+<pre><code class="language-sql">WITH peer_avg AS (
+  SELECT
+    encounter_id, age, time_in_hospital,
+    AVG(time_in_hospital) OVER (PARTITION BY age) AS avg_stay_for_age_group
+  FROM `diabetes.encounter_analysis`
+)
+SELECT
+  encounter_id, age, time_in_hospital, avg_stay_for_age_group,
+  CASE WHEN time_in_hospital &gt; avg_stay_for_age_group
+    THEN &#x27;Above Peer Average&#x27; ELSE &#x27;At/Below Peer Average&#x27; END AS stay_vs_peers
+FROM peer_avg;</code></pre>
+</div>
+<div class="step">
+<h2>Ranking within groups</h2>
+<p class="note">ROW_NUMBER() with QUALIFY finds the 5 longest stays within each Risk Category without a separate subquery to filter on the rank.</p>
+<pre><code class="language-sql">SELECT
+  encounter_id,
+  Risk_Category,
+  time_in_hospital,
+  ROW_NUMBER() OVER (PARTITION BY Risk_Category ORDER BY time_in_hospital DESC) AS stay_rank
+FROM `diabetes.encounter_analysis`
+QUALIFY stay_rank &lt;= 5;</code></pre>
+</div>
+<div class="step">
+<h2>Combining partitions: age AND risk category together</h2>
+<p class="note">Partitioning by more than one column at once narrows the peer group further — comparing a patient only to others who share both their age bracket and their risk level.</p>
+<pre><code class="language-sql">WITH peer_avg AS (
+  SELECT
+    *,
+    AVG(time_in_hospital) OVER (PARTITION BY age, Risk_Category) AS peer_group_avg
+  FROM `diabetes.encounter_analysis`
+)
+SELECT
+  encounter_id, age, Risk_Category, time_in_hospital, peer_group_avg,
+  CASE WHEN time_in_hospital &gt; peer_group_avg
+    THEN &#x27;Above Peer Average&#x27; ELSE &#x27;At/Below Peer Average&#x27; END AS comparison
+FROM peer_avg;</code></pre>
+</div>
+<div class="step">
+<h2>Putting it together: the final risk-readmission question</h2>
+<p class="note">The question the whole project was building toward: do High Risk encounters actually see higher 30-day readmission than Low Risk ones, and how does that vary by age group?</p>
+<pre><code class="language-sql">SELECT
+  Risk_Category,
+  COUNT(*) AS total_encounters,
+  COUNTIF(day30_readmission = &#x27;Within 30 days&#x27;) AS readmissions,
+  ROUND(COUNTIF(day30_readmission = &#x27;Within 30 days&#x27;) / COUNT(*) * 100, 2) AS readmission_rate
+FROM `diabetes.encounter_analysis`
+GROUP BY Risk_Category;
+
+SELECT
+  age,
+  Risk_Category,
+  COUNT(*) AS total_encounters,
+  ROUND(COUNTIF(day30_readmission = &#x27;Within 30 days&#x27;) / COUNT(*) * 100, 2) AS readmission_rate
+FROM `diabetes.encounter_analysis`
+GROUP BY age, Risk_Category
+ORDER BY age, Risk_Category;</code></pre>
+</div>
+
+<div class="pagenav">Part 5 of 5 &middot; <a href="healthcare-1-risk-categorization.html">1</a> &middot; <a href="healthcare-2-subqueries-ctes.html">2</a> &middot; <a href="healthcare-3-joins.html">3</a> &middot; <a href="healthcare-4-analytical-table.html">4</a> &middot; <a href="healthcare-5-window-functions.html">5</a></div>
+<script>hljs.highlightAll();</script>
+</body>
+</html>

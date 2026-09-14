@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2. Subqueries &amp; CTEs — Amna Shahid</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/sql.min.js"></script>
+<style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+    color: #1a1a1a;
+    line-height: 1.55;
+    background: #fff;
+  }
+  a { color: #0b5fff; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .backlink { font-size: 0.9em; margin-bottom: 28px; display: inline-block; }
+  h1 { font-size: 1.5em; margin-bottom: 4px; }
+  .subtitle { color: #666; font-size: 0.95em; margin-bottom: 28px; }
+  .step { margin: 36px 0; }
+  .step h2 {
+    font-size: 1.05em;
+    background: #f4f6f8;
+    padding: 10px 14px;
+    border-left: 3px solid #0b5fff;
+    margin-bottom: 10px;
+  }
+  .step p.note { color: #444; font-size: 0.95em; margin: 8px 0 12px; }
+  pre {
+    background: #f6f8fa;
+    border-radius: 6px;
+    padding: 16px;
+    overflow-x: auto;
+    font-size: 0.85em;
+    border: 1px solid #e3e6e8;
+  }
+  code { font-family: "SF Mono", Menlo, Consolas, monospace; }
+  .pagenav {
+    margin-top: 60px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+    font-size: 0.9em;
+    color: #666;
+  }
+</style>
+</head>
+<body>
+<a class="backlink" href="index.html#projects">&larr; Back to portfolio</a>
+<h1>2. Subqueries &amp; CTEs</h1>
+<div class="subtitle">Scalar subqueries and CTEs used to compute population percentages and reusable intermediate results.</div>
+<div class="step">
+<h2>Scalar subquery: above-average stays</h2>
+<p class="note">A subquery in the WHERE clause compares each row against a single aggregate value computed on the fly.</p>
+<pre><code class="language-sql">SELECT encounter_id, time_in_hospital
+FROM `diabetes.staging_diabetic_data`
+WHERE time_in_hospital &gt; (
+  SELECT AVG(time_in_hospital) FROM `diabetes.staging_diabetic_data`
+)
+ORDER BY time_in_hospital DESC;</code></pre>
+</div>
+<div class="step">
+<h2>Subquery for a population percentage</h2>
+<p class="note">Two independent scalar subqueries — one for the numerator, one for the denominator — answer 'what share of encounters are patients aged 70+?' in a single statement.</p>
+<pre><code class="language-sql">SELECT
+  (SELECT COUNT(*) FROM `diabetes.staging_diabetic_data`
+   WHERE age IN (&#x27;[70-80)&#x27;, &#x27;[80-90)&#x27;, &#x27;[90-100)&#x27;))
+  /
+  (SELECT COUNT(*) FROM `diabetes.staging_diabetic_data`)
+  * 100 AS pct_aged_70_plus;</code></pre>
+</div>
+<div class="step">
+<h2>The same logic as a CTE</h2>
+<p class="note">A CTE names the intermediate result so it can be reused and read top-to-bottom, rather than nesting subqueries inside each other.</p>
+<pre><code class="language-sql">WITH avg_stats AS (
+  SELECT
+    AVG(num_medications) AS avg_medications,
+    AVG(number_diagnoses) AS avg_diagnoses
+  FROM `diabetes.staging_diabetic_data`
+)
+SELECT COUNT(*) AS above_average_encounters
+FROM `diabetes.staging_diabetic_data`, avg_stats
+WHERE num_medications &gt; avg_stats.avg_medications
+   OR number_diagnoses &gt; avg_stats.avg_diagnoses;</code></pre>
+</div>
+<div class="step">
+<h2>CTE + subquery together</h2>
+<p class="note">Combining both: build the utilization/complexity flags in a CTE, then use a subquery to turn the count into a percentage of the full population.</p>
+<pre><code class="language-sql">WITH categories AS (
+  SELECT
+    CASE WHEN number_emergency &gt;= 2 OR number_inpatient &gt;= 2
+      THEN &#x27;High Utilization&#x27; ELSE &#x27;Low Utilization&#x27; END AS Utilization,
+    CASE WHEN number_diagnoses &gt;= 8 OR num_medications &gt;= 15
+      THEN &#x27;High Complexity&#x27; ELSE &#x27;Lower Complexity&#x27; END AS Complexity
+  FROM `diabetes.staging_diabetic_data`
+)
+SELECT
+  (SELECT COUNTIF(Utilization = &#x27;High Utilization&#x27; AND Complexity = &#x27;High Complexity&#x27;)
+   FROM categories)
+  /
+  (SELECT COUNT(*) FROM `diabetes.staging_diabetic_data`)
+  * 100 AS pct_both_high;</code></pre>
+</div>
+
+<div class="pagenav">Part 2 of 5 &middot; <a href="healthcare-1-risk-categorization.html">1</a> &middot; <a href="healthcare-2-subqueries-ctes.html">2</a> &middot; <a href="healthcare-3-joins.html">3</a> &middot; <a href="healthcare-4-analytical-table.html">4</a> &middot; <a href="healthcare-5-window-functions.html">5</a></div>
+<script>hljs.highlightAll();</script>
+</body>
+</html>

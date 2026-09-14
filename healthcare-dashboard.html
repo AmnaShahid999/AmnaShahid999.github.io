@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Healthcare Encounter Utilization & Readmission Dashboard — Amna Shahid</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 32px 24px 80px;
+    color: #1a1a1a;
+    background: #fff;
+  }
+  a { color: #0b5fff; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .backlink { font-size: 0.9em; margin-bottom: 24px; display: inline-block; }
+  h1 { font-size: 1.5em; margin-bottom: 4px; }
+  .subtitle { color: #666; font-size: 0.95em; margin-bottom: 8px; }
+  .source-note { color: #888; font-size: 0.82em; margin-bottom: 32px; }
+  .section-title {
+    font-size: 1.05em;
+    font-weight: 600;
+    margin: 44px 0 16px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #eee;
+  }
+  .kpi-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-bottom: 8px;
+  }
+  .kpi-card {
+    background: #f6f8fa;
+    border: 1px solid #e3e6e8;
+    border-radius: 8px;
+    padding: 16px;
+    text-align: center;
+  }
+  .kpi-value { font-size: 1.6em; font-weight: 700; color: #0b5fff; }
+  .kpi-label { font-size: 0.78em; color: #555; margin-top: 4px; }
+  .chart-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 20px;
+  }
+  .chart-box {
+    background: #fbfbfc;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 16px;
+  }
+  .chart-box.full { grid-column: 1 / -1; }
+  .chart-box h3 { font-size: 0.88em; margin: 0 0 10px; color: #333; }
+  .finding {
+    background: #fff8e6;
+    border-left: 3px solid #e8b400;
+    padding: 10px 14px;
+    font-size: 0.88em;
+    color: #5a4a00;
+    margin-top: 14px;
+    border-radius: 0 4px 4px 0;
+  }
+  canvas { max-height: 260px; }
+  @media (max-width: 700px) {
+    .kpi-row { grid-template-columns: repeat(2, 1fr); }
+    .chart-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<a class="backlink" href="index.html#projects">&larr; Back to portfolio</a>
+<h1>Healthcare Encounter Utilization &amp; Readmission Dashboard</h1>
+<div class="subtitle">101,710 inpatient diabetes encounters &middot; built in BigQuery, visualized here from the same underlying data as the Tableau workbook</div>
+<div class="source-note">Diabetes 130-US Hospitals dataset. All figures below are observational associations from this dataset, not causal claims.</div>
+
+<div class="section-title">Executive Overview</div>
+<div class="kpi-row">
+  <div class="kpi-card"><div class="kpi-value">101,710</div><div class="kpi-label">Total Encounters</div></div>
+  <div class="kpi-card"><div class="kpi-value">11.16%</div><div class="kpi-label">30-Day Readmission Rate</div></div>
+  <div class="kpi-card"><div class="kpi-value">4.4 days</div><div class="kpi-label">Avg. Length of Stay</div></div>
+  <div class="kpi-card"><div class="kpi-value">16.24%</div><div class="kpi-label">High Utilization Rate</div></div>
+  <div class="kpi-card"><div class="kpi-value">74.73%</div><div class="kpi-label">High Complexity Rate</div></div>
+  <div class="kpi-card"><div class="kpi-value">13.51%</div><div class="kpi-label">High Risk Rate</div></div>
+</div>
+
+<div class="section-title">Readmission &amp; Risk</div>
+<div class="chart-row">
+  <div class="chart-box"><h3>30-day readmission rate by Risk Category</h3><canvas id="chartRisk"></canvas></div>
+  <div class="chart-box"><h3>Readmission rate: Utilization &times; Complexity</h3><canvas id="chartCombo"></canvas></div>
+</div>
+<div class="finding">High Risk encounters (both high utilization and high complexity) are readmitted within 30 days at roughly double the rate of Low Risk encounters — 20.47% vs 9.71%. The utilization flag alone tracks readmission more strongly than the complexity flag alone (20.59% vs 11.95%), suggesting prior emergency/inpatient use is a stronger single predictor here than diagnosis or medication count.</div>
+
+<div class="section-title">Patient &amp; Encounter Profile</div>
+<div class="chart-row">
+  <div class="chart-box"><h3>Encounters by age group</h3><canvas id="chartAgeCount"></canvas></div>
+  <div class="chart-box"><h3>30-day readmission rate by age group</h3><canvas id="chartAgeReadmit"></canvas></div>
+  <div class="chart-box full"><h3>Avg. length of stay by age group</h3><canvas id="chartAgeLOS"></canvas></div>
+</div>
+<div class="finding">Readmission does not rise smoothly with age. The [20-30) age group has the highest readmission rate in the dataset (14.24%), ahead of every group over 60 — while length of stay does increase steadily with age. This is an observation, not an explanation: it's a pattern worth investigating further (e.g. differences in follow-up care access by age), not evidence of a cause.</div>
+
+<script>
+const commonOpts = {
+  responsive: true,
+  plugins: { legend: { display: false } },
+  scales: { y: { beginAtZero: true, ticks: { callback: v => v + '%' } } }
+};
+
+new Chart(document.getElementById('chartRisk'), {
+  type: 'bar',
+  data: {
+    labels: ['High Risk', 'Low Risk'],
+    datasets: [{ data: [20.47, 9.71], backgroundColor: ['#e8574a', '#0b5fff'] }]
+  },
+  options: commonOpts
+});
+
+new Chart(document.getElementById('chartCombo'), {
+  type: 'bar',
+  data: {
+    labels: ['High Util /\nHigh Complex', 'High Util /\nLow Complex', 'Low Util /\nHigh Complex', 'Low Util /\nLow Complex'],
+    datasets: [{ data: [20.47, 21.19, 10.07, 7.34], backgroundColor: '#0b5fff' }]
+  },
+  options: commonOpts
+});
+
+new Chart(document.getElementById('chartAgeCount'), {
+  type: 'bar',
+  data: {
+    labels: ['0-10','10-20','20-30','30-40','40-50','50-60','60-70','70-80','80-90','90-100'],
+    datasets: [{ data: [161,691,1657,3775,9682,17254,22472,26044,17181,2793], backgroundColor: '#7a8ca3' }]
+  },
+  options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+});
+
+new Chart(document.getElementById('chartAgeReadmit'), {
+  type: 'bar',
+  data: {
+    labels: ['0-10','10-20','20-30','30-40','40-50','50-60','60-70','70-80','80-90','90-100'],
+    datasets: [{ data: [1.86,5.79,14.24,11.23,10.61,9.67,11.13,11.78,12.08,11.10], backgroundColor: '#e8574a' }]
+  },
+  options: commonOpts
+});
+
+new Chart(document.getElementById('chartAgeLOS'), {
+  type: 'line',
+  data: {
+    labels: ['0-10','10-20','20-30','30-40','40-50','50-60','60-70','70-80','80-90','90-100'],
+    datasets: [{ data: [2.55,3.19,3.56,3.80,4.04,4.13,4.38,4.59,4.81,4.76], borderColor: '#0b5fff', backgroundColor: 'rgba(11,95,255,0.1)', fill: true, tension: 0.3 }]
+  },
+  options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { callback: v => v + 'd' } } } }
+});
+</script>
+</body>
+</html>

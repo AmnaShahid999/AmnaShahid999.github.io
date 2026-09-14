@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>1. Utilization, Complexity &amp; Risk Categorization — Amna Shahid</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/sql.min.js"></script>
+<style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+    color: #1a1a1a;
+    line-height: 1.55;
+    background: #fff;
+  }
+  a { color: #0b5fff; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .backlink { font-size: 0.9em; margin-bottom: 28px; display: inline-block; }
+  h1 { font-size: 1.5em; margin-bottom: 4px; }
+  .subtitle { color: #666; font-size: 0.95em; margin-bottom: 28px; }
+  .step { margin: 36px 0; }
+  .step h2 {
+    font-size: 1.05em;
+    background: #f4f6f8;
+    padding: 10px 14px;
+    border-left: 3px solid #0b5fff;
+    margin-bottom: 10px;
+  }
+  .step p.note { color: #444; font-size: 0.95em; margin: 8px 0 12px; }
+  pre {
+    background: #f6f8fa;
+    border-radius: 6px;
+    padding: 16px;
+    overflow-x: auto;
+    font-size: 0.85em;
+    border: 1px solid #e3e6e8;
+  }
+  code { font-family: "SF Mono", Menlo, Consolas, monospace; }
+  .pagenav {
+    margin-top: 60px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+    font-size: 0.9em;
+    color: #666;
+  }
+</style>
+</head>
+<body>
+<a class="backlink" href="index.html#projects">&larr; Back to portfolio</a>
+<h1>1. Utilization, Complexity &amp; Risk Categorization</h1>
+<div class="subtitle">Defining High Utilization, High Complexity, and High Risk from raw encounter fields, and checking whether they relate to readmission.</div>
+<div class="step">
+<h2>Defining High Utilization</h2>
+<p class="note">High Utilization is defined as 2 or more emergency visits OR 2 or more prior inpatient visits.</p>
+<pre><code class="language-sql">SELECT
+  CASE
+    WHEN number_emergency &gt;= 2 OR number_inpatient &gt;= 2
+      THEN &#x27;High Utilization&#x27;
+    ELSE &#x27;Low Utilization&#x27;
+  END AS Utilization_Category,
+  COUNT(*) AS encounters
+FROM `diabetes.staging_diabetic_data`
+GROUP BY Utilization_Category
+ORDER BY encounters DESC;</code></pre>
+</div>
+<div class="step">
+<h2>Defining High Complexity</h2>
+<p class="note">High Complexity is defined as 8 or more diagnoses OR 15 or more medications on the encounter.</p>
+<pre><code class="language-sql">SELECT
+  CASE
+    WHEN number_diagnoses &gt;= 8 OR num_medications &gt;= 15
+      THEN &#x27;High Complexity&#x27;
+    ELSE &#x27;Low Complexity&#x27;
+  END AS Complexity_Category,
+  COUNT(*) AS encounters,
+  ROUND(AVG(time_in_hospital), 2) AS avg_length_of_stay
+FROM `diabetes.staging_diabetic_data`
+GROUP BY Complexity_Category
+ORDER BY encounters DESC;</code></pre>
+</div>
+<div class="step">
+<h2>Combining into a Risk Category</h2>
+<p class="note">High Risk requires BOTH High Utilization and High Complexity at the same time — this is a deliberately strict definition so 'High Risk' identifies encounters that are stressing the system on more than one dimension at once, not just one.</p>
+<pre><code class="language-sql">WITH categories AS (
+  SELECT
+    *,
+    CASE WHEN number_emergency &gt;= 2 OR number_inpatient &gt;= 2
+      THEN &#x27;High Utilization&#x27; ELSE &#x27;Low Utilization&#x27; END AS Utilization_Category,
+    CASE WHEN number_diagnoses &gt;= 8 OR num_medications &gt;= 15
+      THEN &#x27;High Complexity&#x27; ELSE &#x27;Low Complexity&#x27; END AS Complexity_Category
+  FROM `diabetes.staging_diabetic_data`
+)
+SELECT
+  Utilization_Category,
+  Complexity_Category,
+  CASE WHEN Utilization_Category = &#x27;High Utilization&#x27;
+        AND Complexity_Category = &#x27;High Complexity&#x27;
+       THEN &#x27;High Risk&#x27; ELSE &#x27;Low Risk&#x27; END AS Risk_Category,
+  COUNT(*) AS encounters
+FROM categories
+GROUP BY Utilization_Category, Complexity_Category, Risk_Category
+ORDER BY encounters DESC;</code></pre>
+</div>
+<div class="step">
+<h2>Readmission rate by category</h2>
+<p class="note">With the three categories defined, the first real analytical question: does any one of them actually relate to 30-day readmission?</p>
+<pre><code class="language-sql">SELECT
+  Risk_Category,
+  COUNT(*) AS total_encounters,
+  COUNTIF(day30_readmission = &#x27;Within 30 days&#x27;) AS readmissions,
+  ROUND(COUNTIF(day30_readmission = &#x27;Within 30 days&#x27;) / COUNT(*) * 100, 2) AS readmission_rate
+FROM `diabetes.encounter_analysis`
+GROUP BY Risk_Category;</code></pre>
+</div>
+
+<div class="pagenav">Part 1 of 5 &middot; <a href="healthcare-1-risk-categorization.html">1</a> &middot; <a href="healthcare-2-subqueries-ctes.html">2</a> &middot; <a href="healthcare-3-joins.html">3</a> &middot; <a href="healthcare-4-analytical-table.html">4</a> &middot; <a href="healthcare-5-window-functions.html">5</a></div>
+<script>hljs.highlightAll();</script>
+</body>
+</html>

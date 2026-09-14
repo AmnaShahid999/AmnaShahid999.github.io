@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3. JOINs — Amna Shahid</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/sql.min.js"></script>
+<style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+    color: #1a1a1a;
+    line-height: 1.55;
+    background: #fff;
+  }
+  a { color: #0b5fff; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .backlink { font-size: 0.9em; margin-bottom: 28px; display: inline-block; }
+  h1 { font-size: 1.5em; margin-bottom: 4px; }
+  .subtitle { color: #666; font-size: 0.95em; margin-bottom: 28px; }
+  .step { margin: 36px 0; }
+  .step h2 {
+    font-size: 1.05em;
+    background: #f4f6f8;
+    padding: 10px 14px;
+    border-left: 3px solid #0b5fff;
+    margin-bottom: 10px;
+  }
+  .step p.note { color: #444; font-size: 0.95em; margin: 8px 0 12px; }
+  pre {
+    background: #f6f8fa;
+    border-radius: 6px;
+    padding: 16px;
+    overflow-x: auto;
+    font-size: 0.85em;
+    border: 1px solid #e3e6e8;
+  }
+  code { font-family: "SF Mono", Menlo, Consolas, monospace; }
+  .pagenav {
+    margin-top: 60px;
+    padding-top: 20px;
+    border-top: 1px solid #eee;
+    font-size: 0.9em;
+    color: #666;
+  }
+</style>
+</head>
+<body>
+<a class="backlink" href="index.html#projects">&larr; Back to portfolio</a>
+<h1>3. JOINs</h1>
+<div class="subtitle">Combining encounter, risk-profile, and follow-up tables — and validating that the join didn't drop or duplicate rows.</div>
+<div class="step">
+<h2>Inner join: encounter data + risk profile</h2>
+<p class="note">An INNER JOIN keeps only rows with a match in both tables — the fastest way to see how many encounters actually have a risk profile attached.</p>
+<pre><code class="language-sql">SELECT
+  a.encounter_id, a.race, a.gender, a.age, a.readmitted,
+  b.utilization_category, b.clinical_complexity
+FROM `diabetes.staging_diabetic_data` AS a
+INNER JOIN `diabetes.encounter_risk_profile` AS b
+  ON a.encounter_id = b.encounter_id;</code></pre>
+</div>
+<div class="step">
+<h2>Left join: encounters + optional follow-up records</h2>
+<p class="note">A small follow_up table only has records for encounters that were actually scheduled for follow-up. A LEFT JOIN keeps every encounter from the base table and fills in NULLs where no follow-up exists — an INNER JOIN would have silently dropped those rows.</p>
+<pre><code class="language-sql">SELECT
+  a.encounter_id, a.gender, a.age, b.follow_up_status
+FROM `diabetes.staging_diabetic_data` AS a
+LEFT JOIN `diabetes.follow_up` AS b
+  ON a.encounter_id = b.encounter_id;</code></pre>
+</div>
+<div class="step">
+<h2>Joining three tables</h2>
+<p class="note">Chaining a second LEFT JOIN onto the first brings in follow-up detail on top of the risk profile, while still keeping every base encounter.</p>
+<pre><code class="language-sql">SELECT
+  a.encounter_id, a.age, a.gender, a.readmitted,
+  b.utilization_category, b.clinical_complexity,
+  c.follow_up_status, c.days_to_follow_up,
+  CASE WHEN c.follow_up_status IS NULL
+       THEN &#x27;Follow-up Missing&#x27; ELSE &#x27;Follow-up Available&#x27; END AS follow_up_availability
+FROM `diabetes.staging_diabetic_data` AS a
+INNER JOIN `diabetes.encounter_risk_profile` AS b
+  ON a.encounter_id = b.encounter_id
+LEFT JOIN `diabetes.follow_up` AS c
+  ON a.encounter_id = c.encounter_id;</code></pre>
+</div>
+<div class="step">
+<h2>Validating the join</h2>
+<p class="note">Before trusting any downstream number, confirm the join didn't silently drop or duplicate rows — compare row counts before and after.</p>
+<pre><code class="language-sql">SELECT COUNT(*) AS original_rows
+FROM `diabetes.staging_diabetic_data`;
+
+SELECT COUNT(*) AS joined_rows
+FROM `diabetes.staging_diabetic_data` AS a
+INNER JOIN `diabetes.encounter_risk_profile` AS b
+  ON a.encounter_id = b.encounter_id;
+
+-- A duplicate key on either side of a join can silently multiply rows.
+-- Checking for duplicate encounter_ids on the join key catches that before it corrupts a metric.
+SELECT encounter_id, COUNT(*) AS n
+FROM `diabetes.encounter_risk_profile`
+GROUP BY encounter_id
+HAVING n &gt; 1;</code></pre>
+</div>
+
+<div class="pagenav">Part 3 of 5 &middot; <a href="healthcare-1-risk-categorization.html">1</a> &middot; <a href="healthcare-2-subqueries-ctes.html">2</a> &middot; <a href="healthcare-3-joins.html">3</a> &middot; <a href="healthcare-4-analytical-table.html">4</a> &middot; <a href="healthcare-5-window-functions.html">5</a></div>
+<script>hljs.highlightAll();</script>
+</body>
+</html>
