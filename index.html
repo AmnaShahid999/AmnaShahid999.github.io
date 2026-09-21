@@ -229,7 +229,7 @@
   <div class="wrap-wide">
     <div class="section-head">
       <h2>Selected projects</h2>
-      <p>Ten projects spanning health analytics, causal inference, index design, and data operations. The first four are health and health-policy work.</p>
+      <p>Ten projects spanning health analytics, causal inference, index design, and data operations. The first five are health and health-policy work.</p>
     </div>
 
     <div class="project">
@@ -281,6 +281,50 @@
           <path d="M14,86 C45,82 65,78 80,74 C100,64 120,44 150,30" fill="none" stroke="var(--teal)" stroke-width="2.5"/>
           <path d="M14,90 C45,88 65,86 80,84 C100,80 120,76 150,72" fill="none" stroke="var(--ink-soft)" stroke-width="2" stroke-dasharray="3 4"/>
         </svg>
+      </div>
+    </div>
+
+    <div class="project">
+      <div class="project-text">
+        <h3>Pharmacy licensing by ward &mdash; geospatial dashboards</h3>
+        <div class="project-meta">D.C. Department of Licensing and Consumer Protection &middot; Health access &middot; Columbia practicum</div>
+        <p class="project-story">D.C.'s licensing department could see compliance issues in a spreadsheet but not where they clustered across the city. This practicum set out to make that geography visible so non-technical staff could act on it directly.</p>
+        <p>Joined a ward-boundary shapefile with pharmacy licensing records — entity names, license status, and location — and ward population data to map license density across Washington, D.C.'s eight wards. Originally built in Tableau with QGIS handling spatial data prep; rebuilt below as a live, embedded map from the same underlying data.</p>
+        <p><strong>What it shows:</strong> in the licensing records used, pharmacy license density varies more than tenfold by ward, from about 1 license per 100,000 residents in Ward 5 to about 13 per 100,000 in Ward 2, with Wards 3, 7, and 8 all near 3.5. It is a first look at pharmacy access by neighbourhood. The dashboard describes where licensed pharmacies are and does not itself measure health outcomes, which is the natural next question.</p>
+        <div class="project-links">
+          <a href="dlcp-dashboard.twbx">Original Tableau workbook (.twbx)</a>
+        </div>
+      </div>
+      <div class="project-visual">
+        <svg viewBox="0 0 160 120" xmlns="http://www.w3.org/2000/svg">
+          <g fill="var(--rule)">
+            <circle cx="20" cy="20" r="2"/><circle cx="45" cy="18" r="2"/><circle cx="70" cy="22" r="2"/><circle cx="95" cy="18" r="2"/><circle cx="120" cy="22" r="2"/><circle cx="145" cy="18" r="2"/>
+            <circle cx="20" cy="45" r="2"/><circle cx="145" cy="45" r="2"/>
+            <circle cx="20" cy="70" r="2"/><circle cx="145" cy="70" r="2"/>
+            <circle cx="20" cy="95" r="2"/><circle cx="45" cy="98" r="2"/><circle cx="70" cy="94" r="2"/><circle cx="95" cy="98" r="2"/><circle cx="120" cy="94" r="2"/><circle cx="145" cy="98" r="2"/>
+          </g>
+          <g stroke="var(--teal)" stroke-width="1.4">
+            <line x1="55" y1="50" x2="80" y2="40"/>
+            <line x1="80" y1="40" x2="105" y2="60"/>
+            <line x1="105" y1="60" x2="75" y2="75"/>
+            <line x1="75" y1="75" x2="55" y2="50"/>
+          </g>
+          <g fill="var(--teal)">
+            <circle cx="55" cy="50" r="4"/><circle cx="80" cy="40" r="4"/><circle cx="105" cy="60" r="4"/><circle cx="75" cy="75" r="4"/>
+          </g>
+          <circle cx="80" cy="40" r="4" fill="var(--ochre)"/>
+        </svg>
+      </div>
+      <div class="map-panel">
+        <p class="map-caption">38 active pharmacy licenses mapped against ward boundaries and population — hover a ward for details, click a dot for the license.</p>
+        <div id="dlcp-map"></div>
+        <div class="map-legend">
+          <span>Active licenses per ward:</span>
+          <span class="swatch-row"><span class="swatch" style="background:#E3ECE8;"></span>low</span>
+          <span class="swatch-row"><span class="swatch" style="background:#7FA89A;"></span>mid</span>
+          <span class="swatch-row"><span class="swatch" style="background:#2E6E5E;"></span>high</span>
+          <span class="swatch-row"><span class="dot"></span>pharmacy license</span>
+        </div>
       </div>
     </div>
 
@@ -438,49 +482,6 @@
             <circle cx="125" cy="30" r="3"/><circle cx="132" cy="38" r="3"/><circle cx="118" cy="35" r="3"/><circle cx="128" cy="24" r="3"/>
           </g>
         </svg>
-      </div>
-    </div>
-
-    <div class="project">
-      <div class="project-text">
-        <h3>Geospatial compliance dashboards</h3>
-        <div class="project-meta">D.C. Department of Licensing and Consumer Protection — Columbia practicum</div>
-        <p class="project-story">D.C.'s licensing department could see compliance issues in a spreadsheet but not where they clustered across the city. This practicum set out to make that geography visible so non-technical staff could act on it directly.</p>
-        <p>Joined a ward-boundary shapefile with pharmacy licensing records — entity names, license status, and location — and ward population data to map license density across Washington, D.C.'s eight wards. Originally built in Tableau with QGIS handling spatial data prep; rebuilt below as a live, embedded map from the same underlying data.</p>
-        <div class="project-links">
-          <a href="dlcp-dashboard.twbx">Original Tableau workbook (.twbx)</a>
-        </div>
-      </div>
-      <div class="project-visual">
-        <svg viewBox="0 0 160 120" xmlns="http://www.w3.org/2000/svg">
-          <g fill="var(--rule)">
-            <circle cx="20" cy="20" r="2"/><circle cx="45" cy="18" r="2"/><circle cx="70" cy="22" r="2"/><circle cx="95" cy="18" r="2"/><circle cx="120" cy="22" r="2"/><circle cx="145" cy="18" r="2"/>
-            <circle cx="20" cy="45" r="2"/><circle cx="145" cy="45" r="2"/>
-            <circle cx="20" cy="70" r="2"/><circle cx="145" cy="70" r="2"/>
-            <circle cx="20" cy="95" r="2"/><circle cx="45" cy="98" r="2"/><circle cx="70" cy="94" r="2"/><circle cx="95" cy="98" r="2"/><circle cx="120" cy="94" r="2"/><circle cx="145" cy="98" r="2"/>
-          </g>
-          <g stroke="var(--teal)" stroke-width="1.4">
-            <line x1="55" y1="50" x2="80" y2="40"/>
-            <line x1="80" y1="40" x2="105" y2="60"/>
-            <line x1="105" y1="60" x2="75" y2="75"/>
-            <line x1="75" y1="75" x2="55" y2="50"/>
-          </g>
-          <g fill="var(--teal)">
-            <circle cx="55" cy="50" r="4"/><circle cx="80" cy="40" r="4"/><circle cx="105" cy="60" r="4"/><circle cx="75" cy="75" r="4"/>
-          </g>
-          <circle cx="80" cy="40" r="4" fill="var(--ochre)"/>
-        </svg>
-      </div>
-      <div class="map-panel">
-        <p class="map-caption">38 active pharmacy licenses mapped against ward boundaries and population — hover a ward for details, click a dot for the license.</p>
-        <div id="dlcp-map"></div>
-        <div class="map-legend">
-          <span>Active licenses per ward:</span>
-          <span class="swatch-row"><span class="swatch" style="background:#E3ECE8;"></span>low</span>
-          <span class="swatch-row"><span class="swatch" style="background:#7FA89A;"></span>mid</span>
-          <span class="swatch-row"><span class="swatch" style="background:#2E6E5E;"></span>high</span>
-          <span class="swatch-row"><span class="dot"></span>pharmacy license</span>
-        </div>
       </div>
     </div>
 
