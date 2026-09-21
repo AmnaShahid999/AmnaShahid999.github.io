@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Amna Shahid — Quantitative Analyst</title>
-<meta name="description" content="Portfolio of Amna Shahid, quantitative analyst and researcher — program evaluation, institutional research, and data operations.">
+<meta name="description" content="Portfolio of Amna Shahid, quantitative analyst and researcher — health analytics, program evaluation, institutional research, and data operations.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -189,7 +189,7 @@
   <div class="hero-inner">
     <div class="hero-text">
       <h1>Building the measurements decisions get made on.</h1>
-      <p class="lede">I'm a quantitative analyst working across program evaluation, institutional research, and financial operations — an M.A. in Quantitative Methods from Columbia and a Fulbright behind it.</p>
+      <p class="lede">I'm a quantitative analyst working across health analytics, program evaluation, institutional research, and financial operations — an M.A. in Quantitative Methods from Columbia and a Fulbright behind it.</p>
       <p>Recent work spans a five-index institutional quality framework, a difference-in-differences evaluation of a national health insurance program, and a data operations overhaul that saved PKR 5 million and lifted customer satisfaction to 87%.</p>
     </div>
     <div class="hero-chart" aria-hidden="true">
@@ -229,7 +229,101 @@
   <div class="wrap-wide">
     <div class="section-head">
       <h2>Selected projects</h2>
-      <p>Eight projects spanning full-pipeline modeling, causal inference, index design, and data operations.</p>
+      <p>Ten projects spanning health analytics, causal inference, index design, and data operations. The first four are health and health-policy work.</p>
+    </div>
+
+    <div class="project">
+      <div class="project-text">
+        <h3>Hospital readmissions analysis</h3>
+        <div class="project-meta">Self-directed &middot; BigQuery and Tableau &middot; Diabetes 130-US Hospitals dataset</div>
+        <p class="project-story">Hospital readmissions are expensive and often preventable, but the claims-style data behind them is rarely analysis-ready. I built this pipeline to practice turning that raw data into readmission insight, end to end, on my own.</p>
+        <p>Built a validated SQL pipeline across 101,710 encounters — CASE-derived utilization, complexity, and risk categories, subqueries and CTEs, JOINs, and window functions feeding a validated analytical table and a Tableau dashboard on readmission by risk, utilization, and complexity.</p>
+        <p><strong>What it found:</strong> 11.2% of encounters were readmitted within 30 days. Encounters flagged High Risk (13.5% of the total) were readmitted at 20.5%, versus 9.7% for Low Risk &mdash; but prior utilization carried most of that signal. Readmission rose from 8.4% with no prior inpatient stay to 12.9% with one and 21.4% with multiple, while adding high complexity on top of high utilization did not raise it further. These are unadjusted, descriptive associations, not a validated risk score.</p>
+        <div class="project-links">
+          <a href="healthcare-dashboard.html">View dashboard</a>
+          <a href="Healthcare_Encounter_Utilization-Readmission_Analysis.twbx">Tableau workbook (.twbx)</a>
+          <a href="healthcare-1-risk-categorization.html">Risk categorization</a>
+          <a href="healthcare-2-subqueries-ctes.html">Subqueries &amp; CTEs</a>
+          <a href="healthcare-3-joins.html">Joins</a>
+          <a href="healthcare-4-analytical-table.html">Analytical table</a>
+          <a href="healthcare-5-window-functions.html">Window functions</a>
+        </div>
+      </div>
+      <div class="project-visual">
+        <svg viewBox="0 0 160 120" xmlns="http://www.w3.org/2000/svg">
+          <line x1="14" y1="100" x2="150" y2="100" stroke="var(--ink)" stroke-width="1"/>
+          <g>
+            <rect x="24" y="60" width="16" height="40" fill="var(--teal)"/>
+            <rect x="52" y="40" width="16" height="60" fill="var(--ink-soft)"/>
+            <rect x="80" y="70" width="16" height="30" fill="var(--teal)"/>
+            <rect x="108" y="30" width="16" height="70" fill="var(--ochre)"/>
+            <rect x="136" y="55" width="16" height="45" fill="var(--ink-soft)"/>
+          </g>
+        </svg>
+      </div>
+    </div>
+
+    <div class="project">
+      <div class="project-text">
+        <h3>Difference-in-differences evaluation</h3>
+        <div class="project-meta">KP Sehat Sahulat Program &middot; Health policy &middot; Econometrics term project, Group 1</div>
+        <p class="project-story">Pakistan's Sehat Sahulat program was expanding fast, but expansion isn't evidence of impact — it could just as easily have coincided with health trends already underway. This evaluation set out to isolate what the program itself actually changed.</p>
+        <p>Led the modeling, data analysis, and robustness testing on this team project (co-authored with three classmates): a baseline regression linking household characteristics to infant mortality, then a difference-in-differences design using Khyber Pakhtunkhwa as treatment and Sindh/Punjab as controls. The DID estimate (&minus;0.026, p&lt;0.1) indicates the program reduced infant mortality by roughly 2.6 percentage points; robustness checks confirmed low multicollinearity (VIF 1.08) and addressed heteroskedasticity with robust standard errors.</p>
+        <p><strong>Replication check:</strong> re-estimating both models from the dataset (4,403 observations) reproduces the reported coefficients. The DiD estimate is unchanged when standard errors are clustered by household (p&nbsp;=&nbsp;0.09) or by district (p&nbsp;=&nbsp;0.05).</p>
+        <div class="project-links">
+          <a href="did-sehat-sahulat-evaluation.pdf">View report</a>
+        </div>
+      </div>
+      <div class="project-visual">
+        <svg viewBox="0 0 160 120" xmlns="http://www.w3.org/2000/svg">
+          <line x1="14" y1="100" x2="150" y2="100" stroke="var(--ink)" stroke-width="1"/>
+          <line x1="80" y1="14" x2="80" y2="100" stroke="var(--rule)" stroke-width="1" stroke-dasharray="3 3"/>
+          <path d="M14,86 C45,82 65,78 80,74 C100,64 120,44 150,30" fill="none" stroke="var(--teal)" stroke-width="2.5"/>
+          <path d="M14,90 C45,88 65,86 80,84 C100,80 120,76 150,72" fill="none" stroke="var(--ink-soft)" stroke-width="2" stroke-dasharray="3 4"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="project">
+      <div class="project-text">
+        <h3>Household health and spending after an income shock</h3>
+        <div class="project-meta">Chungi Amar Sadhu, Lahore &middot; LUMS research paper, Group 5 &middot; SurveyCTO household survey</div>
+        <p class="project-story">After COVID-19 cut incomes in a low-income, peri-urban neighbourhood, what did families protect first, and what gave way? This study set out to see whether the answer differed by gender and by who held decision-making power in the household.</p>
+        <p>Designed and fielded a household survey of 173 households (male and female household heads interviewed separately) using systematic sampling and SurveyCTO, then analyzed spending, school dropout and labour-force outcomes with regression and heterogeneity analysis in Stata. Households protected children's schooling, but cut back on their own care: each unit increase in an index of household income loss raised the probability of cutting personal health spending by about 9 percentage points. Field impressions, which the survey did not measure, were that many respondents skipped seeing a doctor unless seriously ill and self-prescribed. Women's decision-making power and gender norms shaped who worked and how households adjusted.</p>
+        <div class="project-links">
+          <a href="chungi-amar-sadhu-research-paper.pdf">View paper</a>
+        </div>
+      </div>
+      <div class="project-visual">
+        <svg viewBox="0 0 160 120" xmlns="http://www.w3.org/2000/svg">
+          <line x1="14" y1="100" x2="150" y2="100" stroke="var(--ink)" stroke-width="1"/>
+          <polygon points="30,60 60,34 90,60" fill="none" stroke="var(--teal)" stroke-width="2.5" stroke-linejoin="round"/>
+          <rect x="38" y="60" width="44" height="40" fill="none" stroke="var(--teal)" stroke-width="2.5"/>
+          <rect x="102" y="46" width="14" height="54" fill="var(--ink-soft)"/>
+          <rect x="124" y="70" width="14" height="30" fill="var(--ochre)"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="project">
+      <div class="project-text">
+        <h3>Carbon emissions, income inequality, and redistribution in South Asia</h3>
+        <div class="project-meta">SAESM regional research project &middot; Cross-country panel, 1980&ndash;2018</div>
+        <p class="project-story">Policies that reduce inequality are often assumed to help the environment, but they can also raise consumption and emissions. This paper set out to measure that tradeoff for South Asia, a region highly exposed to climate change and still in need of growth.</p>
+        <p>Co-authored with four researchers from Nepal, India, Afghanistan, and Bangladesh under faculty supervision. We built a country panel using World Inequality Lab income shares, Penn World Table GDP, and Oak Ridge emissions data, and estimated pooled OLS and fixed-effects models (chosen between with a Hausman test). Inequality was positively associated with per-capita emissions, the results supported an Environmental Kuznets Curve, and a simulated 20% cut in inequality raised emissions by about 0.011%, a small tradeoff that redistributive policy should account for. The paper does not model health outcomes; it addresses the upstream climate and equity tradeoff.</p>
+        <div class="project-links">
+          <a href="carbon-emissions-inequality-south-asia.pdf">View paper</a>
+        </div>
+      </div>
+      <div class="project-visual">
+        <svg viewBox="0 0 160 120" xmlns="http://www.w3.org/2000/svg">
+          <line x1="14" y1="100" x2="150" y2="100" stroke="var(--ink)" stroke-width="1"/>
+          <line x1="14" y1="100" x2="14" y2="14" stroke="var(--ink)" stroke-width="1"/>
+          <path d="M20,90 C45,40 65,24 82,24 C100,24 120,50 148,84" fill="none" stroke="var(--teal)" stroke-width="2.5"/>
+          <line x1="82" y1="24" x2="82" y2="100" stroke="var(--rule)" stroke-width="1" stroke-dasharray="3 3"/>
+          <circle cx="82" cy="24" r="3.5" fill="var(--ochre)"/>
+        </svg>
+      </div>
     </div>
 
     <div class="project">
@@ -321,26 +415,6 @@
 
     <div class="project">
       <div class="project-text">
-        <h3>Difference-in-differences evaluation</h3>
-        <div class="project-meta">KP Sehat Sahulat Program &middot; Econometrics term project, Group 1</div>
-        <p class="project-story">Pakistan's Sehat Sahulat program was expanding fast, but expansion isn't evidence of impact — it could just as easily have coincided with health trends already underway. This evaluation set out to isolate what the program itself actually changed.</p>
-        <p>Led the modeling, data analysis, and robustness testing on this team project (co-authored with three classmates): a baseline regression linking household characteristics to infant mortality, then a difference-in-differences design using Khyber Pakhtunkhwa as treatment and Sindh/Punjab as controls. The DID estimate (&minus;0.026, p&lt;0.1) indicates the program reduced infant mortality by roughly 2.6 percentage points; robustness checks confirmed low multicollinearity (VIF 1.08) and addressed heteroskedasticity with robust standard errors.</p>
-        <div class="project-links">
-          <a href="did-sehat-sahulat-evaluation.pdf">View report</a>
-        </div>
-      </div>
-      <div class="project-visual">
-        <svg viewBox="0 0 160 120" xmlns="http://www.w3.org/2000/svg">
-          <line x1="14" y1="100" x2="150" y2="100" stroke="var(--ink)" stroke-width="1"/>
-          <line x1="80" y1="14" x2="80" y2="100" stroke="var(--rule)" stroke-width="1" stroke-dasharray="3 3"/>
-          <path d="M14,86 C45,82 65,78 80,74 C100,64 120,44 150,30" fill="none" stroke="var(--teal)" stroke-width="2.5"/>
-          <path d="M14,90 C45,88 65,86 80,84 C100,80 120,76 150,72" fill="none" stroke="var(--ink-soft)" stroke-width="2" stroke-dasharray="3 4"/>
-        </svg>
-      </div>
-    </div>
-
-    <div class="project">
-      <div class="project-text">
         <h3>Applicant enrollment segmentation</h3>
         <div class="project-meta">Institutional admissions data</div>
         <p class="project-story">An admissions office had years of applicant records but no way to tell which applicants were actually likely to enroll versus just apply. This project set out to turn that raw, messy export into segments the admissions team could act on.</p>
@@ -426,36 +500,6 @@
       </div>
     </div>
 
-       <div class="project">
-      <div class="project-text">
-        <h3>Hospital readmissions analysis</h3>
-        <div class="project-meta">Self-directed — BigQuery, Diabetes 130-US Hospitals dataset</div>
-        <p class="project-story">Hospital readmissions are expensive and often preventable, but the claims-style data behind them is rarely analysis-ready. I built this pipeline to practice turning that raw data into readmission insight, end to end, on my own.</p>
-        <p>Built a SQL pipeline across 101,710 encounters — CASE-derived utilization, complexity, and risk categories, subqueries and CTEs, JOINs, and window functions feeding a validated analytical table and a Tableau dashboard on readmission by risk, utilization, and complexity.</p>
-        <div class="project-links">
-          <a href="healthcare-dashboard.html">View dashboard</a>
-          <a href="Healthcare_Encounter_Utilization-Readmission_Analysis.twbx">Tableau workbook (.twbx)</a>
-          <a href="healthcare-1-risk-categorization.html">Risk categorization</a>
-          <a href="healthcare-2-subqueries-ctes.html">Subqueries &amp; CTEs</a>
-          <a href="healthcare-3-joins.html">Joins</a>
-          <a href="healthcare-4-analytical-table.html">Analytical table</a>
-          <a href="healthcare-5-window-functions.html">Window functions</a>
-        </div>
-      </div>
-      <div class="project-visual">
-        <svg viewBox="0 0 160 120" xmlns="http://www.w3.org/2000/svg">
-          <line x1="14" y1="100" x2="150" y2="100" stroke="var(--ink)" stroke-width="1"/>
-          <g>
-            <rect x="24" y="60" width="16" height="40" fill="var(--teal)"/>
-            <rect x="52" y="40" width="16" height="60" fill="var(--ink-soft)"/>
-            <rect x="80" y="70" width="16" height="30" fill="var(--teal)"/>
-            <rect x="108" y="30" width="16" height="70" fill="var(--ochre)"/>
-            <rect x="136" y="55" width="16" height="45" fill="var(--ink-soft)"/>
-          </g>
-        </svg>
-      </div>
-    </div>
-    
   </div>
 </section>
 
