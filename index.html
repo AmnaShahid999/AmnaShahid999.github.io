@@ -229,7 +229,7 @@
   <div class="wrap-wide">
     <div class="section-head">
       <h2>Selected projects</h2>
-      <p> Selected projects spanning health analytics, causal inference, policy analysis, index design, and data operations.</p>
+      <p> Selected projects spanning health analytics, credit risk, causal inference, policy analysis, index design, and data operations.</p>
     </div>
 
     <div class="project">
@@ -324,6 +324,20 @@
           <span class="swatch-row"><span class="swatch" style="background:#7FA89A;"></span>mid</span>
           <span class="swatch-row"><span class="swatch" style="background:#2E6E5E;"></span>high</span>
           <span class="swatch-row"><span class="dot"></span>pharmacy license</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="project" id="mortgage-credit-risk">
+      <div class="project-text">
+        <h3>Mortgage credit risk: comparing loan vintages</h3>
+        <div class="project-meta">Self-directed &middot; Python, BigQuery SQL and Tableau &middot; Freddie Mac 2017&ndash;2019 samples</div>
+        <p class="project-story">How does mortgage delinquency change as loans age, and do late-paying loans account for a disproportionate share of outstanding balances? I compared three annual loan cohorts at the same reported loan ages to explore both questions.</p>
+        <p>Prepared origination and monthly performance files in Python, joined loan characteristics to monthly records in BigQuery, and investigated missing values, repeated loan ages and modification-related age resets. Built a Tableau dashboard comparing loan-count and balance-weighted 30+ day delinquency across loan ages 12&ndash;36.</p>
+        <p><strong>What it found:</strong> at age 36, loan-count delinquency was 5.00% for the 2017 vintage, 5.26% for 2018 and 2.36% for 2019. Balance-weighted rates were higher in all three cohorts, indicating larger average outstanding balances among delinquent loans. The comparison covers eligible active records before modification; different calendar periods and changing loan populations limit interpretation.</p>
+        <div class="project-links">
+          <a href="https://public.tableau.com/views/Mortgage_Vintage_Analysis_Repaired/MortgageDelinquencybyOriginationYear" target="_blank" rel="noopener">View interactive dashboard</a>
+          <a href="https://github.com/AmnaShahid999/mortgage-credit-risk-analysis" target="_blank" rel="noopener">Project documentation &amp; code</a>
         </div>
       </div>
     </div>
